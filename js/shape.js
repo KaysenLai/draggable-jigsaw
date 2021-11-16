@@ -1,17 +1,17 @@
 class Shape {
-  constructor(points, center) {
-    this.points = points;
+  constructor(polygon, center) {
+    this.polygon = polygon;
     this.center = center;
     this.color = 'grey';
     this.strokeStyle = 'blue';
   }
-  getPoints = () => this.points;
+  getPolygon = () => this.polygon;
   getCenter = () => this.center;
   getColor = () => this.color;
   getStrokeStyle = () => this.strokeStyle;
 
   move = (x, y) => {
-    this.points.forEach((item) => {
+    this.polygon.forEach((item) => {
       item.x += x;
       item.y += y;
     });
@@ -21,7 +21,7 @@ class Shape {
   moveTo = (x, y) => {
     const dx = x - this.center.x;
     const dy = y - this.center.y;
-    this.points.forEach((item) => {
+    this.polygon.forEach((item) => {
       item.x += dx;
       item.y += dy;
     });
