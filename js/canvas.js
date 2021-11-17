@@ -34,8 +34,8 @@ class MyCanvas {
 
         if (i !== this.shapes.length - 1) {
           this.shapes.splice(i, 1);
-          this.shapes.push(this.draggingShape)
-          this.draw()
+          this.shapes.push(this.draggingShape);
+          this.draw();
         }
 
         this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
