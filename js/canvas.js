@@ -31,6 +31,13 @@ class MyCanvas {
       const mousePosition = this.getMousePosition(e);
       if (isInsidePolygon(mousePosition, shape.getPolygon())) {
         this.draggingShape = this.shapes[i];
+
+        if (i !== this.shapes.length - 1) {
+          this.shapes.splice(i, 1);
+          this.shapes.push(this.draggingShape)
+          this.draw()
+        }
+
         this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
         return;
       }
