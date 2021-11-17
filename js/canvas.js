@@ -1,10 +1,12 @@
+import { VERTICAL, VERTICAL_THRESHOLD } from './constants';
+
 class MyCanvas {
   constructor(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext('2d');
     this.shapes = [];
     this.draggingShape = null;
-
+    this.draggingOffset = null;
     this.canvas.onmousedown = this.select;
     this.canvas.onmousemove = this.drag;
     this.canvas.onmouseup = this.unselect;
@@ -13,7 +15,8 @@ class MyCanvas {
   drag = (e) => {
     if (this.draggingShape === null) return;
     const { x, y } = this.getMousePosition(e);
-    this.draggingShape.moveTo(x, y);
+    this.align();
+    this.draggingShape.moveTo(x - this.draggingOffset.x, y - this.draggingOffset.y);
     this.draw();
   };
   getMousePosition = (e) => {
@@ -24,14 +27,18 @@ class MyCanvas {
   select = (e) => {
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
-      if (isInsidePolygon(this.getMousePosition(e), shape.getPolygon())) {
+      const center = shape.getCenter();
+      const mousePosition = this.getMousePosition(e);
+      if (isInsidePolygon(mousePosition, shape.getPolygon())) {
         this.draggingShape = this.shapes[i];
+        this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
         return;
       }
     }
   };
   unselect = () => {
     this.draggingShape = null;
+    this.draggingOffset = null;
   };
   getCanvas = () => this.canvas;
   getContext = () => this.context;
@@ -39,7 +46,16 @@ class MyCanvas {
     this.shapes.push(shape);
   };
 
+  align = () => {
+    if (this.draggingShape === null) return;
+    const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
+    const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
+    console.log(polygonLines(nearShapes[0]));
+  };
   draw = () => {
+    const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
+    this.context.fill(path);
+
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
@@ -58,6 +74,17 @@ class MyCanvas {
       this.context.closePath();
     }
   };
+}
+
+function calcDistance(point1, point2) {
+  const xSquare = Math.pow(point1.x - point2.x, 2);
+  const ySquare = Math.pow(point1.y - point2.y, 2);
+  return Math.pow(xSquare + ySquare, 0.5);
+}
+
+function calcSlope(point1, point2) {
+  if (Math.abs(point1.x - point2.x) < VERTICAL_THRESHOLD) return VERTICAL;
+  return (point1.y - point2.y) / (point1.x - point2.x);
 }
 
 function isInsidePolygon(p, polygon) {
@@ -91,4 +118,5 @@ function isInsidePolygon(p, polygon) {
 
   return isInside;
 }
+
 export default MyCanvas;
