@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div>
-      <h1>hello coding 101</h1>
-      <img class="logo" src="img/logo.jpg" alt="logo">
-    </div>
-    <canvas id="canvas" width="750" height="400" style="border:1px solid lightgrey;">
-      Your browser does not support the HTML5 canvas tag.
-    </canvas>
-    <script type="module" src="./js/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div>
+    <h1>hello coding 101</h1>
+    <img class="logo" src="img/logo.jpg" alt="logo">
+  </div>
+  <canvas id="canvas" width="750" height="400" style="border:1px solid lightgrey;">
+    Your browser does not support the HTML5 canvas tag.
+  </canvas>
+  <div class="save-load-btns">
+    <button id="save-to-local">save to local</button>
+    <button id="load-from-local">load from local</button>
+    <button id="save-to-file">save to file</button>
+    <button id="load-from-file">load from file
+      <input id="upload-file" type="file" accept=".codeing101" style="display:none;" />
+    </button>
+  </div>
+  <script type="module" src="./js/main.js"></script>
+  <script type="module" src="./js/save-load.js"></script>
+</body>
+
 </html>
