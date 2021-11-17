@@ -1,4 +1,4 @@
-import { VERTICAL, VERTICAL_THRESHOLD } from './constants';
+import { SLOPE_THRESHOLD, VERTICAL, VERTICAL_THRESHOLD } from './constants';
 
 class MyCanvas {
   constructor(canvas) {
@@ -50,7 +50,18 @@ class MyCanvas {
     if (this.draggingShape === null) return;
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
     const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
-    console.log(polygonLines(nearShapes[0]));
+
+    for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
+      const nearShape = nearShapes[nearShapeIndex];
+      const nearPolygonLines = polygonLines(nearShape);
+      const draggingPolygonLines = polygonLines(this.draggingShape);
+      for (let draggingLineIndex = 0; draggingLineIndex < draggingPolygonLines.length; draggingLineIndex++) {
+        const draggingLine = draggingPolygonLines[draggingLineIndex];
+        for (let nearLinesIndex = 0; nearLinesIndex < nearPolygonLines; nearLinesIndex++) {
+          const nearLine = nearPolygonLines[nearLinesIndex];
+        }
+      }
+    }
   };
   draw = () => {
     const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
@@ -74,6 +85,27 @@ class MyCanvas {
       this.context.closePath();
     }
   };
+}
+
+function polygonLines(shape) {
+  const polygon = shape.getPolygon();
+  const lines = [];
+  for (let i = 0; i < polygon.length; i++) {
+    let j = i !== polygon.length - 1 ? i + 1 : 0;
+    const point1 = polygon[i];
+    const point2 = polygon[j];
+    const length = calcDistance(point1, point2);
+    const slope = calcSlope(point1, point2);
+    lines.push({ points: [point1, point2], length, slope });
+  }
+  return lines;
+}
+
+function calcNearShapes(shape, shapes) {
+  const center = shape.getCenter();
+  const shapeDistances = shapes.map((shape) => ({ shape, distance: calcDistance(center, shape.getCenter()) }));
+  shapeDistances.sort((obj1, obj2) => obj1.distance - obj2.distance);
+  return shapeDistances.slice(0, 3).map((item) => item.shape);
 }
 
 function calcDistance(point1, point2) {
