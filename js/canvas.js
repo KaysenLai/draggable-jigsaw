@@ -1,4 +1,4 @@
-import { SLOPE_THRESHOLD, VERTICAL, VERTICAL_THRESHOLD } from './constants';
+import { DISTANCE_THRESHOLD, SLOPE_THRESHOLD, VERTICAL, VERTICAL_THRESHOLD } from './constants';
 
 class MyCanvas {
   constructor(canvas) {
@@ -99,6 +99,20 @@ function polygonLines(shape) {
     lines.push({ points: [point1, point2], length, slope });
   }
   return lines;
+}
+
+function isSlopeEqual(line1, line2) {
+  if (line1.slope === VERTICAL && line2.slope === VERTICAL) return true;
+  return Math.abs(line1.slope - line2.slope) < SLOPE_THRESHOLD;
+}
+function isDistanceEqual(line1, line2) {
+  const line1Point1 = line1.points[0];
+  const line1Point2 = line1.points[1];
+  const line2Point1 = line2.points[0];
+  const line2Point2 = line2.points[1];
+  const distance1 = Math.min(calcDistance(line1Point1, line2Point1), calcDistance(line1Point1, line2Point2));
+  const distance2 = Math.min(calcDistance(line1Point2, line2Point1), calcDistance(line1Point2, line2Point2));
+  return distance1 < DISTANCE_THRESHOLD && distance2 < DISTANCE_THRESHOLD;
 }
 
 function calcNearShapes(shape, shapes) {
