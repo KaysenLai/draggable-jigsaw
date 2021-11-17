@@ -2,7 +2,7 @@ import '../scss/main.scss';
 import MyCanvas from './canvas';
 import Shape from './shape';
 
-const myCanvas = new MyCanvas(document.getElementById('canvas'));
+export const myCanvas = new MyCanvas(document.getElementById('canvas'));
 
 const points = [
   { x: 300, y: 100 },

@@ -1,5 +1,6 @@
 import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
 import { calcLineOffset, isLineOverlap } from './utils/line';
+import Shape from './shape';
 
 class MyCanvas {
   constructor(canvas) {
@@ -104,6 +105,39 @@ class MyCanvas {
       this.context.closePath();
     }
   };
+
+  toString = () => {
+    const data = this.shapes.map((shape) => {
+      const { polygon, center, id, color, strokeStyle } = shape;
+      return { polygon, center, id, color, strokeStyle };
+    });
+
+    return JSON.stringify(data);
+  };
+
+  load = (dataString) => {
+    const temp = this.shapes;
+
+    return new Promise((resolve, reject) => {
+      try {
+        const data = JSON.parse(dataString);
+        this.shapes = [];
+        data.forEach((shape) => {
+          const { polygon, center, id } = shape;
+          if (polygon == null || center == null || id == null) {
+            throw new Error();
+          }
+          this.addShape(new Shape(polygon, center, id));
+        });
+        resolve();
+      } catch (err) {
+        reject();
+        this.shapes = temp;
+      } finally {
+        this.draw();
+      }
+    });
+  };
 }
 
-export default MyCanvas;
+export default MyCanvas
