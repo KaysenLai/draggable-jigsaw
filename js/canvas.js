@@ -15,8 +15,9 @@ class MyCanvas {
   drag = (e) => {
     if (this.draggingShape === null) return;
     const { x, y } = this.getMousePosition(e);
-    this.align();
+    const alignOffset = this.align();
     this.draggingShape.moveTo(x - this.draggingOffset.x, y - this.draggingOffset.y);
+    // this.draggingShape.moveTo(x - this.draggingOffset.x + alignOffset.dx, y - this.draggingOffset.y + alignOffset.dy);
     this.draw();
   };
   getMousePosition = (e) => {
@@ -37,6 +38,10 @@ class MyCanvas {
     }
   };
   unselect = () => {
+    if (this.draggingShape === null) return;
+    const alignOffset = this.align();
+    this.draggingShape.move(alignOffset.dx, alignOffset.dy);
+    this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
   };
@@ -50,10 +55,8 @@ class MyCanvas {
     if (this.draggingShape === null) return;
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
     const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
-
     let lineOverlapFlag = false;
-    let lineOffset = {};
-
+    let alignOffset = { dx: 0, dy: 0 };
     for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
       const nearShape = nearShapes[nearShapeIndex];
       const nearPolygonLines = polygonLines(nearShape);
@@ -64,23 +67,19 @@ class MyCanvas {
 
         for (let nearLinesIndex = 0; nearLinesIndex < nearPolygonLines.length; nearLinesIndex++) {
           const nearLine = nearPolygonLines[nearLinesIndex];
-
           if (isLineOverlap(draggingLine, nearLine)) {
             lineOverlapFlag = true;
-
-            lineOffset = calcLineOffset(draggingLine, nearLine);
-            console.log(lineOffset);
-            break;
+            alignOffset = calcLineOffset(draggingLine, nearLine);
+            return alignOffset;
           }
         }
       }
     }
-    // console.log(lineOffset);
+    return alignOffset;
   };
   draw = () => {
     const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
     this.context.fill(path);
-
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
