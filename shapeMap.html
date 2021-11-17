@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script>
+    const calcCenter = (points) => {
+      let offset = points[0];
+      let twiceArea = 0;
+      let x = 0;
+      let y = 0;
+      let p1, p2;
+      let f;
+      for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+        p1 = points[i];
+        p2 = points[j];
+        f = (p1.x - offset.x) * (p2.y - offset.y) - (p2.x - offset.x) * (p1.y - offset.y);
+        twiceArea += f;
+        x += (p1.x + p2.x - 2 * offset.x) * f;
+        y += (p1.y + p2.y - 2 * offset.y) * f;
+      }
+      f = twiceArea * 3;
+      return {
+        x: x / f + offset.x,
+        y: y / f + offset.y,
+      };
+    }
+
+    const markerRegEx = /[MmLlSsQqLlHhVvCcSsQqTtAaZz]/g;
+    const digitRegEx = /-?[0-9]*\.?\d+/g;
+
+    const svgPathToCommands = (str) => {
+      let results = [];
+      let match;
+      while ((match = markerRegEx.exec(str)) !== null) { results.push(match); };
+      return results
+        .map(function (match) {
+          return {
+            marker: str[match.index],
+            index: match.index
+          };
+        })
+        .reduceRight(function (all, cur) {
+          let chunk = str.substring(cur.index, all.length ? all[all.length - 1].index : str.length);
+          return all.concat([
+            {
+              marker: cur.marker,
+              index: cur.index,
+              chunk: (chunk.length > 0) ? chunk.substr(1, chunk.length - 1) : chunk
+            }
+          ]);
+        }, [])
+        .reverse()
+        .map(function (command) {
+          let values = command.chunk.match(digitRegEx);
+          return { marker: command.marker, values: values ? values.map(parseFloat) : [] };
+        })
+    }
+
+    const generateShapeCode = (svgCommands) => {
+      const pointArray = [];
+      svgCommands.forEach(command => {
+        const marker = command.marker.toLowerCase();
+        switch (marker) {
+          case 'm':
+          case 'l':
+            pointArray.push({
+              x: command.values[0],
+              y: command.values[1],
+            });
+            break;
+          case 'h':
+            pointArray.push({
+              x: command.values[0],
+              y: pointArray[pointArray.length - 1].y,
+            });
+            break;
+          case 'v':
+            pointArray.push({
+              x: pointArray[pointArray.length - 1].x,
+              y: command.values[0],
+            });
+            break;
+          case 'z':
+            break;
+          default:
+            alert('Unsupported SVG command: ' + command.marker);
+            return
+        }
+      });
+      const centerPoint = calcCenter(pointArray);
+
+      return `${JSON.stringify(pointArray)}, ${JSON.stringify(centerPoint)},\n`
+    }
+
+    const getPathString = (svgContent) => {
+      const matchResult = svgContent.match(/<path\sd="(.*?)"/);
+      return matchResult ? matchResult[1] : '';
+    }
+
+    const getGradient = (svgContent) => {
+      const stopArray = [];
+      const x1 = svgContent.match(/x1="(.*?)"/)[1];
+      const y1 = svgContent.match(/y1="(.*?)"/)[1];
+      const x2 = svgContent.match(/x2="(.*?)"/)[1];
+      const y2 = svgContent.match(/y2="(.*?)"/)[1];
+      const stPoint = { x1, y1 };
+      const endPoint = { x2, y2 };
+
+      const stops = svgContent.match(/<stop(\s+offset="(.*?)")?\s+stop-color="(.*?)"/gm);
+      stops.forEach((e) => {
+        const offset = e.match(/offset="(.*?)"/) ? e.match(/offset="(.*?)"/)[1] : 0;
+        const color = e.match(/stop-color="(.*?)"/)[1];
+        stopArray.push([offset, color]);
+      });
+      return `{stPoint: ${JSON.stringify(stPoint)}, endPoint:${JSON.stringify(endPoint)}, colorStops:${JSON.stringify(stopArray)} }`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const fileInput = document.getElementById('file');
+      const codeTextArea = document.getElementById('code');
+      fileInput.addEventListener('change', e => {
+        const files = e.target.files;
+        const reader = new FileReader();
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const reader = new FileReader();
+          reader.addEventListener('loadend', () => {
+            const fileContent = reader.result;
+            if (fileContent.length > 0) {
+              const path = getPathString(fileContent);
+              const commands = svgPathToCommands(path);
+              const pointInfo = generateShapeCode(commands);
+              const colorInfo = getGradient(fileContent);
+              codeTextArea.value += 'new Shape(' + pointInfo + colorInfo + ',);\n\n';
+            }
+          })
+          reader.readAsText(file);
+        }
+      })
+    });
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="file" id="file" multiple="multiple">
+  <br>
+  <textarea rows="20" cols="50" id="code"></textarea>
+</body>
+
+</html>
