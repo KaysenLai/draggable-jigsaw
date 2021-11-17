@@ -1,4 +1,5 @@
-import { DISTANCE_THRESHOLD, SLOPE_THRESHOLD, VERTICAL, VERTICAL_THRESHOLD } from './constants';
+import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
+import { calcLineOffset, isLineOverlap } from './utils/line';
 
 class MyCanvas {
   constructor(canvas) {
@@ -15,9 +16,7 @@ class MyCanvas {
   drag = (e) => {
     if (this.draggingShape === null) return;
     const { x, y } = this.getMousePosition(e);
-    const alignOffset = this.align();
     this.draggingShape.moveTo(x - this.draggingOffset.x, y - this.draggingOffset.y);
-    // this.draggingShape.moveTo(x - this.draggingOffset.x + alignOffset.dx, y - this.draggingOffset.y + alignOffset.dy);
     this.draw();
   };
   getMousePosition = (e) => {
@@ -98,100 +97,6 @@ class MyCanvas {
       this.context.closePath();
     }
   };
-}
-
-function polygonLines(shape) {
-  const polygon = shape.getPolygon();
-  const lines = [];
-  for (let i = 0; i < polygon.length; i++) {
-    let j = i !== polygon.length - 1 ? i + 1 : 0;
-    const point1 = polygon[i];
-    const point2 = polygon[j];
-    const length = calcDistance(point1, point2);
-    const slope = calcSlope(point1, point2);
-    lines.push({ points: [point1, point2], length, slope });
-  }
-  return lines;
-}
-function isLineOverlap(line1, line2) {
-  return isSlopeEqual(line1, line2) && isDistanceEqual(line1, line2);
-}
-function isSlopeEqual(line1, line2) {
-  if (line1.slope === VERTICAL && line2.slope === VERTICAL) return true;
-  return Math.abs(line1.slope - line2.slope) < SLOPE_THRESHOLD;
-}
-function isDistanceEqual(line1, line2) {
-  const line1Point1 = line1.points[0];
-  const line1Point2 = line1.points[1];
-  const line2Point1 = line2.points[0];
-  const line2Point2 = line2.points[1];
-  const distance1 = Math.min(calcDistance(line1Point1, line2Point1), calcDistance(line1Point1, line2Point2));
-  const distance2 = Math.min(calcDistance(line1Point2, line2Point1), calcDistance(line1Point2, line2Point2));
-  return distance1 < DISTANCE_THRESHOLD && distance2 < DISTANCE_THRESHOLD;
-}
-
-function calcLineOffset(line1, line2) {
-  const line1Point1 = line1.points[0];
-  const line1Point2 = line1.points[1];
-  const line2Point1 = line2.points[0];
-  const line2Point2 = line2.points[1];
-  const dx1 = line2Point1.x - line1Point1.x;
-  const dx2 = line2Point1.x - line1Point2.x;
-  const dx = Math.abs(dx1) - Math.abs(dx2) > 0 ? dx2 : dx1;
-  const dy1 = line2Point2.y - line1Point1.y;
-  const dy2 = line2Point2.y - line1Point2.y;
-  const dy = Math.abs(dy1) - Math.abs(dy2) > 0 ? dy2 : dy1;
-  return { dx, dy };
-}
-
-function calcNearShapes(shape, shapes) {
-  const center = shape.getCenter();
-  const shapeDistances = shapes.map((shape) => ({ shape, distance: calcDistance(center, shape.getCenter()) }));
-  shapeDistances.sort((obj1, obj2) => obj1.distance - obj2.distance);
-  return shapeDistances.slice(0, 3).map((item) => item.shape);
-}
-
-function calcDistance(point1, point2) {
-  const xSquare = Math.pow(point1.x - point2.x, 2);
-  const ySquare = Math.pow(point1.y - point2.y, 2);
-  return Math.pow(xSquare + ySquare, 0.5);
-}
-
-function calcSlope(point1, point2) {
-  if (Math.abs(point1.x - point2.x) < VERTICAL_THRESHOLD) return VERTICAL;
-  return (point1.y - point2.y) / (point1.x - point2.x);
-}
-
-function isInsidePolygon(p, polygon) {
-  let isInside = false;
-  let minX = polygon[0].x;
-  let maxX = polygon[0].x;
-  let minY = polygon[0].y;
-  let maxY = polygon[0].y;
-  for (let n = 1; n < polygon.length; n++) {
-    const q = polygon[n];
-    minX = Math.min(q.x, minX);
-    maxX = Math.max(q.x, maxX);
-    minY = Math.min(q.y, minY);
-    maxY = Math.max(q.y, maxY);
-  }
-
-  if (p.x < minX || p.x > maxX || p.y < minY || p.y > maxY) {
-    return false;
-  }
-
-  let i = 0;
-  let j = polygon.length - 1;
-  for (i, j; i < polygon.length; j = i++) {
-    if (
-      polygon[i].y > p.y !== polygon[j].y > p.y &&
-      p.x < ((polygon[j].x - polygon[i].x) * (p.y - polygon[i].y)) / (polygon[j].y - polygon[i].y) + polygon[i].x
-    ) {
-      isInside = !isInside;
-    }
-  }
-
-  return isInside;
 }
 
 export default MyCanvas;
