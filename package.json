@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "deploy": "npm run build & aws s3 sync dist/ s3://coding101.link & aws cloudfront create-invalidation --distribution-id E442TNW8LTU20 --paths \"/*\""
   },
   "devDependencies": {
     "prettier": "^2.4.1",
