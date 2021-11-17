@@ -1,13 +1,15 @@
 class Shape {
-  constructor(polygon, center) {
+  constructor(polygon, center, id) {
     this.polygon = polygon;
     this.center = center;
+    this.id = id;
     this.color = 'grey';
     this.strokeStyle = 'blue';
   }
   getPolygon = () => this.polygon;
   getCenter = () => this.center;
   getColor = () => this.color;
+  getId = () => this.id;
   getStrokeStyle = () => this.strokeStyle;
 
   move = (x, y) => {
