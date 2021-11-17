@@ -51,17 +51,31 @@ class MyCanvas {
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
     const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
 
+    let lineOverlapFlag = false;
+    let lineOffset = {};
+
     for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
       const nearShape = nearShapes[nearShapeIndex];
       const nearPolygonLines = polygonLines(nearShape);
       const draggingPolygonLines = polygonLines(this.draggingShape);
+
       for (let draggingLineIndex = 0; draggingLineIndex < draggingPolygonLines.length; draggingLineIndex++) {
         const draggingLine = draggingPolygonLines[draggingLineIndex];
-        for (let nearLinesIndex = 0; nearLinesIndex < nearPolygonLines; nearLinesIndex++) {
+
+        for (let nearLinesIndex = 0; nearLinesIndex < nearPolygonLines.length; nearLinesIndex++) {
           const nearLine = nearPolygonLines[nearLinesIndex];
+
+          if (isLineOverlap(draggingLine, nearLine)) {
+            lineOverlapFlag = true;
+
+            lineOffset = calcLineOffset(draggingLine, nearLine);
+            console.log(lineOffset);
+            break;
+          }
         }
       }
     }
+    // console.log(lineOffset);
   };
   draw = () => {
     const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
@@ -100,7 +114,9 @@ function polygonLines(shape) {
   }
   return lines;
 }
-
+function isLineOverlap(line1, line2) {
+  return isSlopeEqual(line1, line2) && isDistanceEqual(line1, line2);
+}
 function isSlopeEqual(line1, line2) {
   if (line1.slope === VERTICAL && line2.slope === VERTICAL) return true;
   return Math.abs(line1.slope - line2.slope) < SLOPE_THRESHOLD;
@@ -113,6 +129,20 @@ function isDistanceEqual(line1, line2) {
   const distance1 = Math.min(calcDistance(line1Point1, line2Point1), calcDistance(line1Point1, line2Point2));
   const distance2 = Math.min(calcDistance(line1Point2, line2Point1), calcDistance(line1Point2, line2Point2));
   return distance1 < DISTANCE_THRESHOLD && distance2 < DISTANCE_THRESHOLD;
+}
+
+function calcLineOffset(line1, line2) {
+  const line1Point1 = line1.points[0];
+  const line1Point2 = line1.points[1];
+  const line2Point1 = line2.points[0];
+  const line2Point2 = line2.points[1];
+  const dx1 = line2Point1.x - line1Point1.x;
+  const dx2 = line2Point1.x - line1Point2.x;
+  const dx = Math.abs(dx1) - Math.abs(dx2) > 0 ? dx2 : dx1;
+  const dy1 = line2Point2.y - line1Point1.y;
+  const dy2 = line2Point2.y - line1Point2.y;
+  const dy = Math.abs(dy1) - Math.abs(dy2) > 0 ? dy2 : dy1;
+  return { dx, dy };
 }
 
 function calcNearShapes(shape, shapes) {
