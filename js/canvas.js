@@ -111,29 +111,23 @@ class MyCanvas {
       this.context.lineWidth = strokeWidth;
 
       const color = shape.getColor();
-
-      if (typeof color === 'string') {
-        this.context.fillStyle = color;
-      } else {
-        let {
-          stPoint: { x1, y1 },
-          endPoint: { x2, y2 },
-          colorStops,
-        } = color;
-
-        const linearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
-
-        colorStops.forEach((item) => {
-          const [_point, _color] = item;
-          linearGradient.addColorStop(_point, _color);
-        });
-
-        this.context.fillStyle = linearGradient;
-      }
-
-      this.context.stroke();
-      this.context.fill();
+      let {
+        stPoint: { x1, y1 },
+        endPoint: { x2, y2 },
+        colorStops,
+      } = color;
+      const linearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
+      colorStops.forEach((item) => {
+        const [_point, _color] = item;
+        linearGradient.addColorStop(_point, _color);
+      });
+      this.context.fillStyle = linearGradient;
+      this.context.lineWidth = shape.getLineWidth();
       this.context.closePath();
+      if (i !== 0) {
+        this.context.stroke();
+      }
+      this.context.fill();
     }
   };
 
@@ -176,6 +170,8 @@ class MyCanvas {
     return new Promise((resolve, reject) => {
       try {
         this.shapes = [...model];
+        const backgroundShape = this.shapes[0];
+        backgroundShape.moveTo(500, 300);
         resolve();
       } catch (err) {
         this.shapes = temp;
