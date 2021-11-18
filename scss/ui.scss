@@ -1,0 +1,124 @@
+html, body , .container{
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+.container{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  width: 100vw;
+  height: 50px;
+  background-color: #303030;
+  color: white;
+  text-align: center;
+  line-height: 50px;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.5);
+  z-index: 99;
+
+  span{
+    font-family: "Roboto Light";
+    font-weight: bold;
+    font-size: 25px;
+  }
+}
+
+main{
+  position: relative;
+  flex: 1;
+  background: linear-gradient( #722a54 0%,#511e5b 53.99%, #1f1822 100%);
+  border-radius: 0px;
+
+  .main-container{
+    width: 70%;
+    margin: 0 auto;
+    position: relative;
+
+    .top{
+      width: 100%;
+      display: inline-flex;
+      justify-content: space-between;
+
+      .top-left{
+        display: inline-flex;
+        p{
+          width: 2.3rem;
+          height: 2.3rem;
+          line-height: 2.3rem;
+          color: #FFFFFF;
+          background-color: #333333;
+          border-radius: 10px;
+          margin-right: 0.5rem;
+          text-align: center;
+          font-family: "Roboto Light";
+          font-weight: 500;
+        }
+      }
+
+      .top-right{
+        display: inline-flex;
+        p{
+          height: 2.3rem;
+          line-height: 2.3rem;
+          padding: 0 1rem;
+          color: #FFFFFF;
+          background-color: #333333;
+          border-radius: 10px;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+
+    canvas{
+      width: 100%;
+      height: 60vh;
+      background-color: #333333;
+      border-radius: 6px;
+    }
+
+    .startGame{
+      position: absolute;
+      width: 50px;
+      height: 2rem;
+      bottom: 50px;
+      left: calc(35vw - 15px);
+      background-color: #E73273;
+      color: #FFFFFF;
+      outline: none;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .finishTips{
+      position: absolute;
+      left: 28.5vw;
+      bottom: 20px;
+      color: #FFFFFF;
+      font-family: "Roboto Light";
+      font-size: 2rem;
+      font-weight: 500;
+      text-align: center;
+    }
+  }
+
+  footer{
+    margin-top: 30px;
+    text-align: center;
+    color: #BDBDBD;
+
+    p{
+      font-size: 0.8rem;
+      margin-block-start: 0em;
+      margin-block-end: 0em;
+    }
+  }
+}
