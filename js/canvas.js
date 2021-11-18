@@ -1,6 +1,7 @@
 import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
 import { calcLineOffset, isLineOverlap } from './utils/line';
 import Shape from './shape';
+import { strokeWidth } from './constants';
 
 class MyCanvas {
   constructor(canvas) {
@@ -73,7 +74,8 @@ class MyCanvas {
   align = () => {
     if (this.draggingShape === null) return;
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
-    const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
+    const backgroundShape = this.shapes[0];
+    const nearShapes = [backgroundShape, ...calcNearShapes(this.draggingShape, copyShapes)];
     let lineOverlapFlag = false;
     let alignOffset = { dx: 0, dy: 0 };
     for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
@@ -98,8 +100,6 @@ class MyCanvas {
   };
 
   draw = () => {
-    const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
-    this.context.fill(path);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
@@ -111,7 +111,7 @@ class MyCanvas {
       }
       this.context.lineTo(polygon[0].x, polygon[0].y);
       this.context.strokeStyle = shape.getStrokeStyle();
-      this.context.lineWidth = '3';
+      this.context.lineWidth = strokeWidth;
 
       const color = shape.getColor();
 
@@ -123,21 +123,15 @@ class MyCanvas {
           endPoint: { x2, y2 },
           colorStops,
         } = color;
-        const { x, y } = shape.getDelta();
 
-        x1 = Math.floor(Number(x1)) + x;
-        x2 = Math.floor(Number(x2)) + x;
-        y1 = Math.floor(Number(y1)) + y;
-        y2 = Math.floor(Number(y2)) + y;
-
-        const inearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
+        const linearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
 
         colorStops.forEach((item) => {
           const [_point, _color] = item;
-          inearGradient.addColorStop(_point, _color);
+          linearGradient.addColorStop(_point, _color);
         });
 
-        this.context.fillStyle = inearGradient;
+        this.context.fillStyle = linearGradient;
       }
 
       this.context.stroke();

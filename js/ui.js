@@ -34,7 +34,6 @@ function switchGame(ele) {
 
     // 同时需要重新渲染画布，这里请自行补充
 
-
     // 之前元素褪色
     let saveEle = document.querySelector('.' + saveClass);
     saveEle.style.backgroundColor = '#333333';
@@ -61,7 +60,6 @@ function startGame() {
   }, 1000);
 
   // 此时画布内的碎片才能可以拖动,可以跟在后面写
-
 }
 
 /*游戏提示*/
@@ -90,7 +88,8 @@ function alertBySweet(text) {
   alertDiv.id = 'alertDiv';
   document.body.appendChild(alertDiv);
   alertDiv.appendChild(alertButton);
-  let style = '#alertDiv{\n' +
+  let style =
+    '#alertDiv{\n' +
     '            position: absolute;\n' +
     '            left: 0;\n' +
     '            right: 0;\n' +
@@ -144,7 +143,7 @@ function alertWithButtonBySweet(text) {
   alertDiv.appendChild(buttonDiv);
   buttonDiv.appendChild(alertButton);
   alertButton.addEventListener('click', closeAlert);
-  let pattern = new RegExp('[\u4E00-\u9FA5]+');// 中文字符
+  let pattern = new RegExp('[\u4E00-\u9FA5]+'); // 中文字符
   let textLength = 0;
   // 需要分别统计中文和英文的长度，英文两个单词算一个
   for (let i = 0; i < text.length; i++) {
@@ -157,7 +156,7 @@ function alertWithButtonBySweet(text) {
 
   let height = 0;
   if (textLength % 36 != 0) {
-    if ((textLength / 36) == 0) {
+    if (textLength / 36 == 0) {
       height = (textLength / 36) * 1 + 5;
     } else {
       height = (textLength / 36) * 1 + 6;
@@ -165,7 +164,8 @@ function alertWithButtonBySweet(text) {
   } else {
     height = (textLength / 36) * 1 + 5;
   }
-  let style = '#alertDiv {\n' +
+  let style =
+    '#alertDiv {\n' +
     '            position: absolute;\n' +
     '            left: 0;\n' +
     '            right: 0;\n' +
@@ -173,7 +173,9 @@ function alertWithButtonBySweet(text) {
     '            bottom: 0;\n' +
     '            margin: auto;\n' +
     '            width: 300px;\n' +
-    '            height: ' + height + 'rem;\n' +
+    '            height: ' +
+    height +
+    'rem;\n' +
     '            padding: 0.5rem;\n' +
     '            background-color: black;\n' +
     '            border-radius: 5px;\n' +
