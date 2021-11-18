@@ -16,7 +16,7 @@ saveToLocalBtn.addEventListener('click', () => {
 loadFromLocalBtn.addEventListener('click', () => {
   const processData = localStorage.getItem('progress');
   myCanvas
-    .load(processData)
+    .loadFromString(processData)
     .then((_) => {
       // TODO 成功提示
     })
@@ -27,7 +27,7 @@ loadFromLocalBtn.addEventListener('click', () => {
 
 // 保存到文件
 saveToFileBtn.addEventListener('click', () => {
-  const processData = localStorage.getItem('progress');
+  const processData = myCanvas.toString();
 
   outputToFile(
     processData,
@@ -46,11 +46,11 @@ loadFromFileBtn.addEventListener('click', () => {
 
 upload.addEventListener('change', () => {
   const file = upload.files[0];
-  const testResult =file.name.match(/\.(.*?)$/)
+  const testResult = file.name.match(/\.(.*?)$/);
 
   if (Array.isArray(testResult) && testResult[1] !== 'codeing101') {
     // TODO 出错提示
-    return
+    return;
   }
 
   const fr = new FileReader();
@@ -60,7 +60,7 @@ upload.addEventListener('change', () => {
     let processData = e.target.result;
 
     myCanvas
-      .load(processData)
+      .loadFromString(processData)
       .then((_) => {
         // TODO 成功提示
       })

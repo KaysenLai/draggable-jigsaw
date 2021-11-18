@@ -14,17 +14,20 @@ class MyCanvas {
     this.canvas.onmouseup = this.unselect;
     this.canvas.onmouseout = this.unselect;
   }
+
   drag = (e) => {
     if (this.draggingShape === null) return;
     const { x, y } = this.getMousePosition(e);
     this.draggingShape.moveTo(x - this.draggingOffset.x, y - this.draggingOffset.y);
     this.draw();
   };
+
   getMousePosition = (e) => {
     const x = e.pageX - this.canvas.offsetLeft;
     const y = e.pageY - this.canvas.offsetTop;
     return { x, y };
   };
+
   select = (e) => {
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
@@ -44,6 +47,7 @@ class MyCanvas {
       }
     }
   };
+
   unselect = () => {
     if (this.draggingShape === null) return;
     const alignOffset = this.align();
@@ -84,6 +88,7 @@ class MyCanvas {
     }
     return alignOffset;
   };
+
   draw = () => {
     const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
     this.context.fill(path);
@@ -99,7 +104,34 @@ class MyCanvas {
       this.context.lineTo(polygon[0].x, polygon[0].y);
       this.context.strokeStyle = shape.getStrokeStyle();
       this.context.lineWidth = '3';
-      this.context.fillStyle = shape.getColor();
+
+      const color = shape.getColor();
+
+      if (typeof color === 'string') {
+        this.context.fillStyle = color;
+      } else {
+        let {
+          stPoint: { x1, y1 },
+          endPoint: { x2, y2 },
+          colorStops,
+        } = color;
+        const { x, y } = shape.getCenter();
+
+        x1 = Math.floor(Number(x1) + x);
+        x2 = Math.floor(Number(x2) + x);
+        y1 = Math.floor(Number(y1) + y);
+        y2 = Math.floor(Number(y2) + y);
+
+        const inearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
+
+        colorStops.forEach((item) => {
+          const [_point, _color] = item;
+          inearGradient.addColorStop(_point, _color);
+        });
+
+        this.context.fillStyle = inearGradient;
+      }
+
       this.context.stroke();
       this.context.fill();
       this.context.closePath();
@@ -115,7 +147,7 @@ class MyCanvas {
     return JSON.stringify(data);
   };
 
-  load = (dataString) => {
+  loadFromString = (dataString) => {
     const temp = this.shapes;
 
     return new Promise((resolve, reject) => {
@@ -123,16 +155,32 @@ class MyCanvas {
         const data = JSON.parse(dataString);
         this.shapes = [];
         data.forEach((shape) => {
-          const { polygon, center, id } = shape;
-          if (polygon == null || center == null || id == null) {
+          const { polygon, center, color } = shape;
+          if (polygon == null || center == null) {
             throw new Error();
           }
-          this.addShape(new Shape(polygon, center, id));
+          this.addShape(new Shape(polygon, center, color));
         });
         resolve();
       } catch (err) {
-        reject();
         this.shapes = temp;
+        reject();
+      } finally {
+        this.draw();
+      }
+    });
+  };
+
+  loadFromModel = (model) => {
+    const temp = this.shapes;
+
+    return new Promise((resolve, reject) => {
+      try {
+        this.shapes = [...model];
+        resolve();
+      } catch (err) {
+        this.shapes = temp;
+        reject();
       } finally {
         this.draw();
       }
@@ -140,4 +188,4 @@ class MyCanvas {
   };
 }
 
-export default MyCanvas
+export default MyCanvas;
