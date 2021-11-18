@@ -32,7 +32,8 @@ class MyCanvas {
     let currentIndex = -1;
     const mousePosition = this.getMousePosition(e);
 
-    for (let i = this.shapes.length - 1; i >= 0; i--) {
+    // this.shapes 中第一项为背景，不可选中，所以 i >= 1
+    for (let i = this.shapes.length - 1; i >= 1; i--) {
       if (isInsidePolygon(mousePosition, this.shapes[i].getPolygon())) {
         currentIndex = i;
         break;
@@ -43,7 +44,7 @@ class MyCanvas {
       const shape = this.shapes[currentIndex];
       const center = shape.getCenter();
 
-      this.draggingShape = shape
+      this.draggingShape = shape;
 
       if (currentIndex !== this.shapes.length - 1) {
         this.shapes.splice(currentIndex, 1);
@@ -147,8 +148,8 @@ class MyCanvas {
 
   toString = () => {
     const data = this.shapes.map((shape) => {
-      const { polygon, center, id, color, strokeStyle } = shape;
-      return { polygon, center, id, color, strokeStyle };
+      const { polygon, center, color } = shape;
+      return { polygon, center, color };
     });
 
     return JSON.stringify(data);
