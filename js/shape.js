@@ -1,11 +1,11 @@
 class Shape {
-  constructor(polygon, center, color = 'grey') {
+  constructor(polygon, center, id, color = 'grey') {
     this.polygon = polygon;
     this.center = center;
     this.originCenter = { ...center };
     this.color = color;
     this.strokeStyle = 'blue';
-    this.id = Math.random().toString(36).slice(-6);
+    this.id = id
   }
 
   getPolygon = () => this.polygon;
