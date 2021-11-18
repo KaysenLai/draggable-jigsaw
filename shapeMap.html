@@ -112,7 +112,7 @@
 
       const stops = svgContent.match(/<stop(\s+offset="(.*?)")?\s+stop-color="(.*?)"/gm);
       stops.forEach((e) => {
-        const offset = e.match(/offset="(.*?)"/) ? e.match(/offset="(.*?)"/)[1] : 0;
+        const offset = e.match(/offset="(.*?)"/) ? e.match(/offset="(.*?)"/)[1] : "0";
         const color = e.match(/stop-color="(.*?)"/)[1];
         stopArray.push([offset, color]);
       });
