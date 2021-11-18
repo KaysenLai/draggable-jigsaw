@@ -123,12 +123,12 @@ class MyCanvas {
           endPoint: { x2, y2 },
           colorStops,
         } = color;
-        const { x, y } = shape.getCenter();
+        const { x, y } = shape.getDelta();
 
-        x1 = Math.floor(Number(x1) + x);
-        x2 = Math.floor(Number(x2) + x);
-        y1 = Math.floor(Number(y1) + y);
-        y2 = Math.floor(Number(y2) + y);
+        x1 = Math.floor(Number(x1)) + x;
+        x2 = Math.floor(Number(x2)) + x;
+        y1 = Math.floor(Number(y1)) + y;
+        y2 = Math.floor(Number(y2)) + y;
 
         const inearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
 

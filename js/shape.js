@@ -2,6 +2,7 @@ class Shape {
   constructor(polygon, center, color = 'grey') {
     this.polygon = polygon;
     this.center = center;
+    this.originCenter = { ...center };
     this.color = color;
     this.strokeStyle = 'blue';
     this.id = Math.random().toString(36).slice(-6);
@@ -12,6 +13,10 @@ class Shape {
   getColor = () => this.color;
   getId = () => this.id;
   getStrokeStyle = () => this.strokeStyle;
+  getDelta = () => ({
+    x: this.center.x - this.originCenter.x,
+    y: this.center.y - this.originCenter.y,
+  });
 
   move = (x, y) => {
     this.polygon.forEach((item) => {
