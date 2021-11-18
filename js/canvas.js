@@ -148,8 +148,8 @@ class MyCanvas {
 
   toString = () => {
     const data = this.shapes.map((shape) => {
-      const { polygon, center, color } = shape;
-      return { polygon, center, color };
+      const { polygon, center, id, color } = shape;
+      return { polygon, center, id, color };
     });
 
     return JSON.stringify(data);
@@ -163,11 +163,11 @@ class MyCanvas {
         const data = JSON.parse(dataString);
         this.shapes = [];
         data.forEach((shape) => {
-          const { polygon, center, color } = shape;
-          if (polygon == null || center == null) {
+          const { polygon, center, id, color } = shape;
+          if (polygon == null || center == null || id == null) {
             throw new Error();
           }
-          this.addShape(new Shape(polygon, center, color));
+          this.addShape(new Shape(polygon, center, id, color));
         });
         resolve();
       } catch (err) {

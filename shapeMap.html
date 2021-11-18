@@ -35,7 +35,9 @@
     const svgPathToCommands = (str) => {
       let results = [];
       let match;
-      while ((match = markerRegEx.exec(str)) !== null) { results.push(match); };
+      while ((match = markerRegEx.exec(str)) !== null) {
+        results.push(match);
+      };
       return results
         .map(function (match) {
           return {
@@ -45,18 +47,19 @@
         })
         .reduceRight(function (all, cur) {
           let chunk = str.substring(cur.index, all.length ? all[all.length - 1].index : str.length);
-          return all.concat([
-            {
-              marker: cur.marker,
-              index: cur.index,
-              chunk: (chunk.length > 0) ? chunk.substr(1, chunk.length - 1) : chunk
-            }
-          ]);
+          return all.concat([{
+            marker: cur.marker,
+            index: cur.index,
+            chunk: (chunk.length > 0) ? chunk.substr(1, chunk.length - 1) : chunk
+          }]);
         }, [])
         .reverse()
         .map(function (command) {
           let values = command.chunk.match(digitRegEx);
-          return { marker: command.marker, values: values ? values.map(parseFloat) : [] };
+          return {
+            marker: command.marker,
+            values: values ? values.map(parseFloat) : []
+          };
         })
     }
 
@@ -107,12 +110,18 @@
       const y1 = svgContent.match(/y1="(.*?)"/)[1];
       const x2 = svgContent.match(/x2="(.*?)"/)[1];
       const y2 = svgContent.match(/y2="(.*?)"/)[1];
-      const stPoint = { x1, y1 };
-      const endPoint = { x2, y2 };
+      const stPoint = {
+        x1: +x1,
+        y1: +y1
+      };
+      const endPoint = {
+        x2: +x2,
+        y2: +y2
+      };
 
       const stops = svgContent.match(/<stop(\s+offset="(.*?)")?\s+stop-color="(.*?)"/gm);
       stops.forEach((e) => {
-        const offset = e.match(/offset="(.*?)"/) ? e.match(/offset="(.*?)"/)[1] : "0";
+        const offset = e.match(/offset="(.*?)"/) ? +e.match(/offset="(.*?)"/)[1] : 0;
         const color = e.match(/stop-color="(.*?)"/)[1];
         stopArray.push([offset, color]);
       });
@@ -122,22 +131,36 @@
     document.addEventListener('DOMContentLoaded', () => {
       const fileInput = document.getElementById('file');
       const codeTextArea = document.getElementById('code');
+
       fileInput.addEventListener('change', e => {
         const files = e.target.files;
         const reader = new FileReader();
         for (let i = 0; i < files.length; i++) {
+
+          if(i ===0 ) {
+            codeTextArea.value = '';
+          }
+
           const file = files[i];
           const reader = new FileReader();
           reader.addEventListener('loadend', () => {
             const fileContent = reader.result;
+            const fileId = file.name.match(/\-(.*?)\./)?.[1] || 0;
+
             if (fileContent.length > 0) {
               const path = getPathString(fileContent);
               const commands = svgPathToCommands(path);
               const pointInfo = generateShapeCode(commands);
               const colorInfo = getGradient(fileContent);
-              codeTextArea.value += 'new Shape(' + pointInfo + colorInfo + ',);\n\n';
+              codeTextArea.value += `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
             }
+
+            if(i === files.length - 1) {
+              codeTextArea.value = `[${codeTextArea.value}]`
+            }
+
           })
+
           reader.readAsText(file);
         }
       })
