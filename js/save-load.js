@@ -9,12 +9,12 @@ const upload = document.querySelector('#upload-file');
 
 // 保存到本地
 saveToLocalBtn.addEventListener('click', () => {
-  localStorage.setItem('progress', myCanvas.toString());
+  localStorage.setItem(`level-${myCanvas.getLevel()}`, myCanvas.toString());
 });
 
 // 从本地加载
 loadFromLocalBtn.addEventListener('click', () => {
-  const processData = localStorage.getItem('progress');
+  const processData = localStorage.getItem('level-1'); // TODO 选择加载
   myCanvas
     .loadFromString(processData)
     .then((_) => {

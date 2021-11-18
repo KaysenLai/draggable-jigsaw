@@ -1,7 +1,8 @@
 import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
-import { calcLineOffset, isLineOverlap } from './utils/line';
+import { calcDistance, calcLineOffset, isLineOverlap } from './utils/line';
 import Shape from './shape';
-import { strokeWidth } from './constants';
+import { CANVAS_BG_COLOR, strokeWidth, WIN_DISTANCE_THRESHOLD } from './constants';
+import { getGameData } from './gameData';
 
 class MyCanvas {
   constructor(canvas) {
@@ -14,6 +15,8 @@ class MyCanvas {
     this.canvas.onmousemove = this.drag;
     this.canvas.onmouseup = this.unselect;
     this.canvas.onmouseout = this.unselect;
+    this.winPositions = {};
+    this.level = 1;
   }
 
   drag = (e) => {
@@ -61,8 +64,24 @@ class MyCanvas {
     this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
+    this.checkWin(() => {
+      setTimeout(() => {
+        alert('You Win');
+      }, 100);
+    });
+  };
+  checkWin = (cb, ...args) => {
+    let isWin = false;
+    this.shapes.forEach((shape) => {
+      const winCenter = this.winPositions[shape.getId()];
+      isWin = calcDistance(winCenter, shape.getCenter()) < WIN_DISTANCE_THRESHOLD;
+    });
+    if (isWin) {
+      cb(...args);
+    }
   };
   getCanvas = () => this.canvas;
+  getLevel = () => this.level;
   getContext = () => this.context;
   addShape = (shape) => {
     this.shapes.push(shape);
@@ -98,6 +117,9 @@ class MyCanvas {
 
   draw = () => {
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.context.fillStyle = CANVAS_BG_COLOR;
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
       const polygon = shape.getPolygon();
@@ -132,22 +154,40 @@ class MyCanvas {
   };
 
   toString = () => {
-    const data = this.shapes.map((shape) => {
+    const shapes = this.shapes.map((shape) => {
       const { polygon, center, id, color } = shape;
       return { polygon, center, id, color };
     });
-
+    const data = { time: 0, shapes, win: this.winPositions };
     return JSON.stringify(data);
   };
 
-  loadFromString = (dataString) => {
-    const temp = this.shapes;
+  initGame = (level) => {
+    const { win, shapes, time } = getGameData(level);
+    this.winPositions = win;
+    this.shapes = [];
+    shapes.forEach((shape) => {
+      const { polygon, center, id, color } = shape;
+      this.addShape(new Shape(polygon, center, id, color));
+    });
+    this.draw();
+  };
 
+  exportWin = () => {
+    const map = {};
+    this.shapes.forEach((shape) => {
+      map[shape.getId()] = shape.getCenter();
+    });
+    console.log(JSON.stringify(map));
+  };
+  loadFromString = (dataString) => {
+    const temp = { shapes: this.shapes, time: 0, win: this.winPositions };
     return new Promise((resolve, reject) => {
       try {
         const data = JSON.parse(dataString);
         this.shapes = [];
-        data.forEach((shape) => {
+        const { win, shapes, time } = data;
+        shapes.forEach((shape) => {
           const { polygon, center, id, color } = shape;
           if (polygon == null || center == null || id == null) {
             throw new Error();
@@ -156,7 +196,8 @@ class MyCanvas {
         });
         resolve();
       } catch (err) {
-        this.shapes = temp;
+        this.shapes = temp.shapes;
+        this.winPositions = temp.win;
         reject();
       } finally {
         this.draw();
