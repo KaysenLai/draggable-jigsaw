@@ -1,13 +1,17 @@
 {
   "name": "vite-original",
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
+    "test": "jest",
     "deploy": "npm run build & aws s3 sync dist/ s3://coding101.link & aws cloudfront create-invalidation --distribution-id E442TNW8LTU20 --paths \"/*\""
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.4",
+    "jest": "^27.3.1",
     "prettier": "^2.4.1",
     "sass": "^1.43.4",
     "vite": "^2.5.4"

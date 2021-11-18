@@ -19,6 +19,18 @@ class MyCanvas {
     this.level = 1;
   }
 
+  freeze = () => {
+    this.canvas.onmousedown = null;
+    this.canvas.onmousemove = null;
+    this.canvas.onmouseup = null;
+    this.canvas.onmouseout = null;
+  };
+  unFreeze = () => {
+    this.canvas.onmousedown = this.select;
+    this.canvas.onmousemove = this.drag;
+    this.canvas.onmouseup = this.unselect;
+    this.canvas.onmouseout = this.unselect;
+  };
   drag = (e) => {
     if (this.draggingShape === null) return;
     const { x, y } = this.getMousePosition(e);
@@ -71,10 +83,9 @@ class MyCanvas {
     });
   };
   checkWin = (cb, ...args) => {
-    let isWin = false;
-    this.shapes.forEach((shape) => {
+    const isWin = this.shapes.every((shape) => {
       const winCenter = this.winPositions[shape.getId()];
-      isWin = calcDistance(winCenter, shape.getCenter()) < WIN_DISTANCE_THRESHOLD;
+      return calcDistance(winCenter, shape.getCenter()) < WIN_DISTANCE_THRESHOLD;
     });
     if (isWin) {
       cb(...args);
