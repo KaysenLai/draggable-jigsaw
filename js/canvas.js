@@ -74,8 +74,8 @@ class MyCanvas {
   align = () => {
     if (this.draggingShape === null) return;
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
-    // this.shapes[0] is the background layer
-    const nearShapes = [this.shapes[0], ...calcNearShapes(this.draggingShape, copyShapes)];
+    const backgroundShape = this.shapes[0];
+    const nearShapes = [backgroundShape, ...calcNearShapes(this.draggingShape, copyShapes)];
     let lineOverlapFlag = false;
     let alignOffset = { dx: 0, dy: 0 };
     for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
@@ -123,12 +123,6 @@ class MyCanvas {
           endPoint: { x2, y2 },
           colorStops,
         } = color;
-        const { x, y } = shape.getDelta();
-
-        x1 = Math.floor(Number(x1)) + x;
-        x2 = Math.floor(Number(x2)) + x;
-        y1 = Math.floor(Number(y1)) + y;
-        y2 = Math.floor(Number(y2)) + y;
 
         const linearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
 
