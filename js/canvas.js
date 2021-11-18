@@ -29,22 +29,29 @@ class MyCanvas {
   };
 
   select = (e) => {
-    for (let i = 0; i < this.shapes.length; i++) {
-      const shape = this.shapes[i];
-      const center = shape.getCenter();
-      const mousePosition = this.getMousePosition(e);
-      if (isInsidePolygon(mousePosition, shape.getPolygon())) {
-        this.draggingShape = this.shapes[i];
+    let currentIndex = -1;
+    const mousePosition = this.getMousePosition(e);
 
-        if (i !== this.shapes.length - 1) {
-          this.shapes.splice(i, 1);
-          this.shapes.push(this.draggingShape);
-          this.draw();
-        }
-
-        this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
-        return;
+    for (let i = this.shapes.length - 1; i >= 0; i--) {
+      if (isInsidePolygon(mousePosition, this.shapes[i].getPolygon())) {
+        currentIndex = i;
+        break;
       }
+    }
+
+    if (currentIndex !== -1) {
+      const shape = this.shapes[currentIndex];
+      const center = shape.getCenter();
+
+      this.draggingShape = shape
+
+      if (currentIndex !== this.shapes.length - 1) {
+        this.shapes.splice(currentIndex, 1);
+        this.shapes.push(this.draggingShape);
+        this.draw();
+      }
+
+      this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
     }
   };
 
