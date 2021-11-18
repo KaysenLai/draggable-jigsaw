@@ -1,9 +1,10 @@
 class Shape {
-  constructor(polygon, center, id, color = 'grey') {
+  constructor(polygon, center, id, color) {
     this.polygon = polygon;
     this.center = center;
     this.color = color;
-    this.strokeStyle = 'blue';
+    this.strokeStyle = '#451B4E';
+    this.lineWidth = 5;
     this.id = id;
   }
 
@@ -12,6 +13,7 @@ class Shape {
   getColor = () => this.color;
   getId = () => this.id;
   getStrokeStyle = () => this.strokeStyle;
+  getLineWidth = () => this.lineWidth;
 
   move = (dx, dy) => {
     this.polygon.forEach((point) => {
