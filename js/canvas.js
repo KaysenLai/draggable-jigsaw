@@ -1,6 +1,7 @@
 import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
 import { calcLineOffset, isLineOverlap } from './utils/line';
 import Shape from './shape';
+import { strokeWidth } from './constants';
 
 class MyCanvas {
   constructor(canvas) {
@@ -73,7 +74,8 @@ class MyCanvas {
   align = () => {
     if (this.draggingShape === null) return;
     const copyShapes = [...this.shapes].filter((shape) => shape.getId() !== this.draggingShape.getId());
-    const nearShapes = calcNearShapes(this.draggingShape, copyShapes);
+    // this.shapes[0] is the background layer
+    const nearShapes = [this.shapes[0], ...calcNearShapes(this.draggingShape, copyShapes)];
     let lineOverlapFlag = false;
     let alignOffset = { dx: 0, dy: 0 };
     for (let nearShapeIndex = 0; nearShapeIndex < nearShapes.length; nearShapeIndex++) {
@@ -109,7 +111,7 @@ class MyCanvas {
       }
       this.context.lineTo(polygon[0].x, polygon[0].y);
       this.context.strokeStyle = shape.getStrokeStyle();
-      this.context.lineWidth = '3';
+      this.context.lineWidth = strokeWidth;
 
       const color = shape.getColor();
 
