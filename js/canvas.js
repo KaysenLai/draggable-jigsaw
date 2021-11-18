@@ -44,15 +44,12 @@ class MyCanvas {
     if (currentIndex !== -1) {
       const shape = this.shapes[currentIndex];
       const center = shape.getCenter();
-
       this.draggingShape = shape;
-
       if (currentIndex !== this.shapes.length - 1) {
         this.shapes.splice(currentIndex, 1);
         this.shapes.push(this.draggingShape);
         this.draw();
       }
-
       this.draggingOffset = { x: mousePosition.x - center.x, y: mousePosition.y - center.y };
     }
   };

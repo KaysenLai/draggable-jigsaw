@@ -4,7 +4,7 @@ class Shape {
     this.center = center;
     this.color = color;
     this.strokeStyle = 'blue';
-    this.id = id
+    this.id = id;
   }
 
   getPolygon = () => this.polygon;
@@ -13,14 +13,14 @@ class Shape {
   getId = () => this.id;
   getStrokeStyle = () => this.strokeStyle;
 
-  move = (x, y) => {
-    console.log(this.color);
-    this.polygon.forEach((item) => {
-      item.x += x;
-      item.y += y;
+  move = (dx, dy) => {
+    this.polygon.forEach((point) => {
+      point.x += dx;
+      point.y += dy;
     });
-    this.center.x += x;
-    this.center.y += y;
+    this.center.x += dx;
+    this.center.y += dy;
+    this.moveLinearGradient(dx, dy);
   };
 
   moveTo = (x, y) => {
@@ -32,6 +32,15 @@ class Shape {
     });
     this.center.x += dx;
     this.center.y += dy;
+    this.moveLinearGradient(dx, dy);
+  };
+
+  moveLinearGradient = (dx, dy) => {
+    const { stPoint, endPoint } = this.color;
+    stPoint.x1 += dx;
+    stPoint.y1 += dy;
+    endPoint.x2 += dx;
+    endPoint.y2 += dy;
   };
 }
 
