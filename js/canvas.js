@@ -98,8 +98,6 @@ class MyCanvas {
   };
 
   draw = () => {
-    const path = new Path2D('M0 15L4 27L5.5 54L19 75.5L18 69.5L19 58.5L12 22.5H9.5L6.5 16L10.5 15.5L4 0.5L0 15Z');
-    this.context.fill(path);
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     for (let i = 0; i < this.shapes.length; i++) {
       const shape = this.shapes[i];
@@ -130,14 +128,14 @@ class MyCanvas {
         y1 = Math.floor(Number(y1) + y);
         y2 = Math.floor(Number(y2) + y);
 
-        const inearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
+        const linearGradient = this.context.createLinearGradient(x1, y1, x2, y2);
 
         colorStops.forEach((item) => {
           const [_point, _color] = item;
-          inearGradient.addColorStop(_point, _color);
+          linearGradient.addColorStop(_point, _color);
         });
 
-        this.context.fillStyle = inearGradient;
+        this.context.fillStyle = linearGradient;
       }
 
       this.context.stroke();
