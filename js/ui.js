@@ -178,7 +178,7 @@ export function alertWithButtonsByXuKai(text) {
   const alertDiv = document.querySelector('.alert-three');
   alertDiv.classList.remove('hidden');
   alertDiv.classList.add('show');
-  const alertText = document.querySelector('.alert-text');
+  const alertText = document.querySelector('.alert-three .alert-text');
   const loadButton = document.querySelector('.load-button');
   const deleteButton = document.querySelector('.delete-button');
   const cancelButton = document.querySelector('.cancel-button');
