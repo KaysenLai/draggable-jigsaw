@@ -37,6 +37,10 @@ nav {
 main {
   min-width: 1100px;
   background: linear-gradient(#722a54 0%, #511e5b 53.99%, $background 100%);
+
+  #canvas {
+    border-radius: 8px;
+  }
   .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -46,7 +50,7 @@ main {
   }
 
   .control-bar {
-    padding: 10px;
+    padding: 10px 0;
     display: inline-flex;
     justify-content: space-between;
     margin: 12px 0 4px 0;
@@ -97,7 +101,10 @@ footer {
   text-align: center;
   color: #BDBDBD;
   background-color: $background;
-
+  .logo {
+    width: 100px;
+    margin-bottom: 10px;
+  }
   p {
     font-size: 0.8rem;
     margin-block-start: 0;
