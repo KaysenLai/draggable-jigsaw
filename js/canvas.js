@@ -3,6 +3,7 @@ import { calcDistance, calcLineOffset, isLineOverlap } from './utils/line';
 import Shape from './shape';
 import { CANVAS_BG_COLOR, WIN_DISTANCE_THRESHOLD } from './constants';
 import { getGameData } from './gameData';
+import { alertBySweet, alertWithButtonBySweet, timeTransform } from './ui';
 
 class MyCanvas {
   constructor(canvas) {
@@ -78,7 +79,10 @@ class MyCanvas {
     this.draggingOffset = null;
     this.checkWin(() => {
       setTimeout(() => {
-        alert('You Win');
+        const curGame = sessionStorage.getItem('curGame');
+        const curGameTime = parseInt(sessionStorage.getItem(curGame + 'Time'));
+        alertWithButtonBySweet('You win! 共计用时:' + timeTransform(curGameTime));
+        sessionStorage.setItem(curGame + 'Time', '0');
       }, 100);
     });
   };
@@ -183,6 +187,12 @@ class MyCanvas {
     });
     this.level = level;
     this.draw();
+    this.freeze();
+    if (document.querySelector('.start-game-btn').classList.contains('hidden')) {
+      this.unFreeze();
+    } else {
+      alertBySweet('请点击start按钮开始游戏~');
+    }
   };
 
   exportWin = () => {
@@ -190,7 +200,7 @@ class MyCanvas {
     this.shapes.forEach((shape) => {
       map[shape.getId()] = shape.getCenter();
     });
-    alert('The positions of centers are in console');
+    alertWithButtonBySweet('The positions of centers are in console');
   };
   loadFromString = (dataString) => {
     const temp = { shapes: this.shapes, time: 0, win: this.winPositions };

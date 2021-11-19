@@ -8,6 +8,7 @@ const hint = document.querySelector('.hint');
 const save = document.querySelector('.save');
 const logo = document.querySelector('.logo');
 const startGameBtn = document.querySelector('.start-game-btn');
+const cancelHintBtn = document.querySelector('.cancel-hint-btn');
 
 logo.setAttribute('src', logoSvg);
 // 存储当前游戏名称
@@ -48,6 +49,10 @@ startGameBtn.addEventListener('click', () => {
   startGame();
 });
 
+cancelHintBtn.addEventListener('click', () => {
+  cancelHint();
+});
+
 firstGame.classList.add('btn-select');
 
 // 初始游戏时间为0
@@ -55,20 +60,22 @@ let curGameTime = 0;
 // 定时器
 let timer;
 
+alertBySweet('快点击start按钮开始游戏吧~');
+
 /*切换游戏*/
 function switchGame(ele) {
   clearInterval(timer);
   const saveClass = sessionStorage.getItem('curGame');
+
   if (ele === saveClass) {
     return;
   }
+
   // 保存当前游戏的数据
   saveGame();
   // 点击元素上色
   const clickEle = document.querySelector('.' + ele);
   clickEle.classList.add('btn-select');
-
-  // 同时需要重新渲染画布，这里请自行补充
 
   // 之前元素褪色
   const saveEle = document.querySelector('.' + saveClass);
@@ -91,32 +98,54 @@ function startGame() {
   timer = setInterval(() => {
     console.log('开始计时');
     curGameTime++;
+    sessionStorage.setItem(curGame + 'Time', curGameTime);
     console.log(timeTransform(curGameTime));
   }, 1000);
 
-  // 此时画布内的碎片才能可以拖动,可以跟在后面写
+  // 此时画布内的碎片才能可以拖动
+  myCanvas.unFreeze();
 }
 
 /*游戏提示*/
 function gameHint() {
-  // 弹窗示例--看看哪里可用，做了两种
-  alertBySweet('第一种弹窗~');
+  const level = myCanvas.getLevel();
+  const modal = document.querySelector('.modal');
+  const hintImg = document.querySelector('.hint-img');
+  const body = document.querySelector('body');
+  switch (level) {
+    case 1:
+      hintImg.src = 'img/fox.svg';
+      break;
+    case 2:
+      hintImg.src = 'img/elephant.svg';
+      break;
+    case 3:
+      hintImg.src = 'img/deer.svg';
+      break;
+  }
+  modal.classList.remove('hidden');
+  modal.classList.add('show');
+  body.classList.add('hideOverFlow');
+}
+
+/*取消提示*/
+function cancelHint() {
+  const modal = document.querySelector('.modal');
+  const body = document.querySelector('body');
+  modal.classList.remove('show');
+  modal.classList.add('hidden');
+  body.classList.remove('hideOverFlow');
 }
 
 /*保存当前游戏*/
 function saveGame() {
-  const curGame = sessionStorage.getItem('curGame');
   console.log('当前游戏用时：' + curGameTime);
   // 弹窗示例--看看哪里可用
-  alertWithButtonBySweet('第二种弹窗~');
-  // 保存当前游戏数据,在sessionStorage中以得到的curGame和Data组合得出 要存储当前游戏数据的 游戏名称
-
-  // 保存当前游戏时间
-  sessionStorage.setItem(curGame + 'Time', curGameTime);
+  alertBySweet('游戏数据已保存~');
 }
 
 /*弹窗封装*/
-function alertBySweet(text) {
+export function alertBySweet(text) {
   const alertDialog = document.querySelector('.alert-one');
   const alertBtn = document.querySelectorAll('.alert-btn')[0];
   alertBtn.innerHTML = text;
@@ -128,7 +157,7 @@ function alertBySweet(text) {
 }
 
 /*带确定按钮的弹窗*/
-function alertWithButtonBySweet(text) {
+export function alertWithButtonBySweet(text) {
   const alertDiv = document.querySelector('.alert-two');
   alertDiv.classList.remove('hidden');
   alertDiv.classList.add('show');
@@ -149,7 +178,7 @@ function closeAlert(ele) {
 }
 
 /*秒转换为分钟+秒*/
-function timeTransform(time) {
+export function timeTransform(time) {
   // 分秒的格式为00:00，不足两位的用0占位
   // 分钟
   let minute = Math.floor(time / 60);
@@ -170,5 +199,5 @@ function timeTransform(time) {
     showSecond = second;
   }
 
-  return showMin + ':' + showSecond;
+  return showMin + '分' + showSecond + '秒';
 }

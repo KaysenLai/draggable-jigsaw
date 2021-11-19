@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset='UTF-8' />
+  <link rel='icon' type='image/svg+xml' href='favicon.svg' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
   <title>Poly Animals</title>
 </head>
 
 <body>
-  <div class="save-load-btns">
-    <button id="save-to-local">save to local</button>
-    <button id="load-from-local">load from local</button>
-    <button id="save-to-file">save to file</button>
-    <button id="load-from-file">load from file
-      <input id="upload-file" type="file" accept=".codeing101" style="display:none;" />
+<div>
+  <div class='save-load-btns'>
+    <button id='save-to-local'>save to local</button>
+    <button id='load-from-local'>load from local</button>
+    <button id='save-to-file'>save to file</button>
+    <button id='load-from-file'>load from file
+      <input id='upload-file' type='file' accept='.codeing101' style='display:none;' />
     </button>
-    <button id="win-data">win-data</button>
-    <button id="load-nearly-win">load-nearly-win</button>
+    <button id='win-data'>win-data</button>
+    <button id='load-nearly-win'>load-nearly-win</button>
   </div>
   <main>
     <nav>
       <span>Poly</span>
       <span>Animals</span>
     </nav>
-    <div class="container">
+    <div class='container'>
       <div class='control-bar'>
         <div>
           <button class='btn first-game'>1</button>
@@ -41,8 +42,7 @@
       </canvas>
       <button class='start-game-btn'>start</button>
       <div class='finish-tips hidden'>
-        <p>Congratulation!</p>
-        <p class='play-time'>08:23</p>
+        <p class='play-time'></p>
       </div>
 
       <div class='alert-one hidden'>
@@ -52,15 +52,23 @@
         <p class='alert-text'></p>
         <button class='confirm-button'>确定</button>
       </div>
+
     </div>
   </main>
   <footer>
-    <img class="logo" src='./img/logo.svg' alt='logo'>
+    <img class='logo' src='./img/logo.svg' alt='logo'>
     <p>Designed and developed by Coding 101</p>
     <p>Non-commercial use. Pictures are from GoGoDesignStudio</p>
   </footer>
+</div>
 
-  <script type="module" src="./index.js"></script>
+<div class='modal hidden'>
+  <div class='modal-container'>
+    <button class='cancel-hint-btn'>X</button>
+    <img class='hint-img' src='img/deer.svg'>
+  </div>
+</div>
+<script type='module' src='./index.js'></script>
 </body>
 
 </html>
