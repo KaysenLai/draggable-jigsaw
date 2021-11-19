@@ -1,6 +1,6 @@
 import Shape from '../shape';
 
-const foxModel = [
+const svgLoader = [
   new Shape(
     [
       { x: 155.596, y: 18.2062 },
@@ -760,4 +760,4 @@ const foxModel = [
   ),
 ];
 
-export default foxModel;
+export default svgLoader;
