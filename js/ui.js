@@ -1,4 +1,7 @@
 import logoSvg from '../img/logo.svg';
+import deerSvg from '../img/deer.svg';
+import foxSvg from '../img/fox.svg';
+import elephantSvg from '../img/elephant.svg';
 import { myCanvas } from './main';
 
 const firstGame = document.querySelector('.first-game');
@@ -114,13 +117,13 @@ function gameHint() {
   const body = document.querySelector('body');
   switch (level) {
     case 1:
-      hintImg.src = 'img/fox.svg';
+      hintImg.src = deerSvg;
       break;
     case 2:
-      hintImg.src = 'img/elephant.svg';
+      hintImg.src = elephantSvg;
       break;
     case 3:
-      hintImg.src = 'img/deer.svg';
+      hintImg.src = deerSvg;
       break;
   }
   modal.classList.remove('hidden');
@@ -175,7 +178,7 @@ export function alertWithButtonsByXuKai(text) {
   const alertDiv = document.querySelector('.alert-three');
   alertDiv.classList.remove('hidden');
   alertDiv.classList.add('show');
-  const alertText = document.querySelector('.alert-text');
+  const alertText = document.querySelector('.alert-three .alert-text');
   const loadButton = document.querySelector('.load-button');
   const deleteButton = document.querySelector('.delete-button');
   const cancelButton = document.querySelector('.cancel-button');
@@ -185,13 +188,13 @@ export function alertWithButtonsByXuKai(text) {
   const processData = localStorage.getItem(`level-${level}`);
   loadButton.addEventListener('click', () => {
     myCanvas
-    .loadFromString(processData)
-    .then((_) => {
-      // TODO 成功提示
-    })
-    .catch((_) => {
-      // TODO 出错提示
-    });
+      .loadFromString(processData)
+      .then((_) => {
+        // TODO 成功提示
+      })
+      .catch((_) => {
+        // TODO 出错提示
+      });
     closeAlert('alert-three');
   });
   deleteButton.addEventListener('click', () => {
@@ -203,7 +206,6 @@ export function alertWithButtonsByXuKai(text) {
     closeAlert('alert-three');
   });
 }
-
 
 /*移除弹窗*/
 function closeAlert(ele) {
