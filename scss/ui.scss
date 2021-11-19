@@ -1,22 +1,22 @@
-html, body , .container{
+html, body, .container {
   margin: 0;
   padding: 0;
   font-size: 14px;
 }
 
-*{
+* {
   box-sizing: border-box;
 }
 
-.container{
-  width: 100%;
+.container {
+  width: 100vw;
   height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 header {
-  width: 100%;
+  width: 100vw;
   height: 50px;
   background-color: #303030;
   color: white;
@@ -25,32 +25,42 @@ header {
   box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.5);
   z-index: 99;
 
-  span{
+  span {
     font-family: "Roboto Light";
     font-weight: bold;
     font-size: 25px;
   }
+
+  .span1 {
+    color: #E73273;
+  }
+
+  .span2 {
+    color: #9e1fda;
+  }
 }
 
-main{
+main {
   position: relative;
   flex: 1;
-  background: linear-gradient( #722a54 0%,#511e5b 53.99%, #1f1822 100%);
+  background: linear-gradient(#722a54 0%, #511e5b 53.99%, #1f1822 100%);
   border-radius: 0px;
 
-  .main-container{
+  .main-container {
     width: 70%;
     margin: 0 auto;
     position: relative;
 
-    .top{
+    .top {
       width: 100%;
+      padding: 10px;
       display: inline-flex;
       justify-content: space-between;
 
-      .top-left{
+      .top-left {
         display: inline-flex;
-        p{
+
+        button {
           width: 2.3rem;
           height: 2.3rem;
           line-height: 2.3rem;
@@ -61,12 +71,19 @@ main{
           text-align: center;
           font-family: "Roboto Light";
           font-weight: 500;
+          outline: none;
+          border: none;
+        }
+
+        .select {
+          background-color: #E73273;
         }
       }
 
-      .top-right{
+      .top-right {
         display: inline-flex;
-        p{
+
+        button {
           height: 2.3rem;
           line-height: 2.3rem;
           padding: 0 1rem;
@@ -74,18 +91,20 @@ main{
           background-color: #333333;
           border-radius: 10px;
           margin-left: 0.5rem;
+          outline: none;
+          border: none;
         }
       }
     }
 
-    canvas{
+    canvas {
       width: 100%;
       height: 60vh;
       background-color: #333333;
       border-radius: 6px;
     }
 
-    .startGame{
+    .startGame {
       position: absolute;
       width: 50px;
       height: 2rem;
@@ -98,7 +117,7 @@ main{
       border-radius: 5px;
     }
 
-    .finishTips{
+    .finishTips {
       position: absolute;
       left: 28.5vw;
       bottom: 20px;
@@ -110,15 +129,101 @@ main{
     }
   }
 
-  footer{
+  footer {
     margin-top: 30px;
     text-align: center;
     color: #BDBDBD;
 
-    p{
+    p {
       font-size: 0.8rem;
       margin-block-start: 0em;
       margin-block-end: 0em;
     }
   }
 }
+
+.alertDivOne {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.alert-btn {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  height: 2rem;
+  padding: 0 8px;
+  background-color: black;
+  opacity: 0.8;
+  text-align: center;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  animation: animate 1s;
+}
+
+@keyframes animate {
+  from {
+    top: 10%;
+    opacity: 0
+  }
+  to {
+    top: 0%;
+    opacity: 1
+  }
+}
+
+.show {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.alertDivTwo {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  width: 300px;
+  height: 90px;
+  padding: 0.5rem;
+  background-color: black;
+  border-radius: 5px;
+  opacity: 0.8;
+  animation: animate 1s;
+}
+
+.alertDivTwo p {
+  word-break: break-word;
+  line-height: 1rem;
+  color: white;
+}
+
+.confirmButton {
+  float: right;
+  height: 2rem;
+  line-height: 2rem;
+  padding: 0 1rem;
+  background-color: #E73273;
+  text-align: center;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  outLine: none;
+}
+
+button {
+  cursor: pointer;
+}
+

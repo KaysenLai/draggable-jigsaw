@@ -28,38 +28,43 @@
   </div>
   <div class='container'>
     <header>
-      <span style='color: #E73273;'>Poly</span>
-      <span style='color: #9e1fda;'>Animals</span>
+      <span class='header span1' style=''>Poly</span>
+      <span class='header span2' style=''>Animals</span>
     </header>
     <main>
       <div class='main-container'>
         <div class='top'>
           <div class='top-left'>
-            <p class='firstGame' onclick='switchGame("firstGame")'>1</p>
-            <p class='secondGame' onclick='switchGame("secondGame")'>2</p>
-            <p class='thirdGame' onclick='switchGame("thirdGame")'>3</p>
+            <button class='firstGame'>1</button>
+            <button class='secondGame'>2</button>
+            <button class='thirdGame'>3</button>
           </div>
           <div class='top-right'>
-            <p class='hint' onclick='hint()'>Hints</p>
-            <p class='save' onclick='saveGame()'>Save</p>
+            <button class='hint'>Hints</button>
+            <button class='save'>Save</button>
           </div>
         </div>
-        <canvas id='canvas2' width='750' height='400'>
+        <canvas id='canvas' width='750' height='400'>
           Your browser does not support the HTML5 canvas tag.
         </canvas>
-        <button class='startGame' onclick='startGame("init")'>start</button>
-        <!--      游戏成功时可以把下面代码放开-->
-        <!--      <div class='finishTips'>-->
-        <!--        <p>Congratulation!</p>-->
-        <!--      此处的时间动态传入，这里只做样式展示-->
-        <!--        <p><span>08</span>:<span>23</span></p>-->
-        <!--      </div>-->
+        <button class='startGame'>start</button>
+        <div class='finishTips hidden'>
+          <p>Congratulation!</p>
+          <p class='playTime'>08:23</p>
+        </div>
       </div>
       <footer>
-        <img src='../img/logo.svg' height='41' width='66'>
+        <img src='./img/logo.svg' height='41' width='66' alt='logo'>
         <p>Designed and developed by Coding 101</p>
         <p>Non-commercial use. Pictures are from GoGoDesignStudio</p>
       </footer>
+      <div class='alertDivOne hidden'>
+        <button class='alert-btn'></button>
+      </div>
+      <div class='alertDivTwo hidden'>
+        <p class='dialogText'></p>
+        <button class='confirmButton'>确定</button>
+      </div>
     </main>
   </div>
   <script type="module" src="./index.js"></script>
