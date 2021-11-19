@@ -1,10 +1,14 @@
+import logoSvg from '../img/logo.svg';
+
 const firstGame = document.querySelector('.first-game');
 const secondGame = document.querySelector('.second-game');
 const thirdGame = document.querySelector('.third-game');
 const hint = document.querySelector('.hint');
 const save = document.querySelector('.save');
+const logo = document.querySelector('.logo');
 const startGameBtn = document.querySelector('.start-game-btn');
 
+logo.setAttribute('src', logoSvg);
 // 存储当前游戏名称
 sessionStorage.setItem('curGame', 'first-game');
 // 分别存储三个游戏的游戏数据
@@ -40,37 +44,35 @@ startGameBtn.addEventListener('click', () => {
   startGame();
 });
 
-firstGame.classList.add('select');
+firstGame.classList.add('btn-select');
 
 // 初始游戏时间为0
 let curGameTime = 0;
 // 定时器
 let timer;
 
-
 /*切换游戏*/
 function switchGame(ele) {
   clearInterval(timer);
   const saveClass = sessionStorage.getItem('curGame');
-  if (ele == saveClass) {
+  if (ele === saveClass) {
     return;
   }
   // 保存当前游戏的数据
   saveGame();
   // 点击元素上色
   const clickEle = document.querySelector('.' + ele);
-  clickEle.classList.add('select');
+  clickEle.classList.add('btn-select');
 
   // 同时需要重新渲染画布，这里请自行补充
 
   // 之前元素褪色
   const saveEle = document.querySelector('.' + saveClass);
-  saveEle.classList.remove('select');
+  saveEle.classList.remove('btn-select');
   // 更新sessionStorage中的游戏
   sessionStorage.setItem('curGame', ele);
   // 展示开始按钮
   startGameBtn.classList.remove('hidden');
-
 }
 
 /*开始游戏*/

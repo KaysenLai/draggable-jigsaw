@@ -4,7 +4,7 @@ class Shape {
     this.center = center;
     this.color = color;
     this.strokeStyle = '#451B4E';
-    this.lineWidth = 5;
+    this.lineWidth = 10;
     this.id = id;
   }
 

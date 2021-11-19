@@ -39,8 +39,14 @@ class MyCanvas {
   };
 
   getMousePosition = (e) => {
+    // const rect = this.canvas.getBoundingClientRect();
+    // const x = e.clientX - rect.left;
+    // const y = e.clientY - rect.top;
+    // const x = e.layerX;
+    // const y = e.layerY;
     const x = e.pageX - this.canvas.offsetLeft;
     const y = e.pageY - this.canvas.offsetTop;
+    console.log({ x, y });
     return { x, y };
   };
 
@@ -48,10 +54,10 @@ class MyCanvas {
     let currentIndex = -1;
     const mousePosition = this.getMousePosition(e);
 
-    // this.shapes 中第一项为背景，不可选中，所以 i >= 1
     for (let i = this.shapes.length - 1; i >= 1; i--) {
       if (isInsidePolygon(mousePosition, this.shapes[i].getPolygon())) {
         currentIndex = i;
+        console.log(this.shapes[i]);
         break;
       }
     }
@@ -60,6 +66,7 @@ class MyCanvas {
       const shape = this.shapes[currentIndex];
       const center = shape.getCenter();
       this.draggingShape = shape;
+
       if (currentIndex !== this.shapes.length - 1) {
         this.shapes.splice(currentIndex, 1);
         this.shapes.push(this.draggingShape);
@@ -76,11 +83,11 @@ class MyCanvas {
     this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
-    this.checkWin(() => {
-      setTimeout(() => {
-        alert('You Win');
-      }, 100);
-    });
+    // this.checkWin(() => {
+    //   setTimeout(() => {
+    //     alert('You Win');
+    //   }, 100);
+    // });
   };
   checkWin = (cb, ...args) => {
     const isWin = this.shapes.every((shape) => {
@@ -156,7 +163,7 @@ class MyCanvas {
       });
       this.context.fillStyle = linearGradient;
       this.context.lineWidth = shape.getLineWidth();
-      this.context.closePath();
+      // this.context.closePath();
       if (i !== 0) {
         this.context.stroke();
       }
@@ -218,12 +225,11 @@ class MyCanvas {
 
   loadFromModel = (model) => {
     const temp = this.shapes;
-
     return new Promise((resolve, reject) => {
       try {
         this.shapes = [...model];
         const backgroundShape = this.shapes[0];
-        backgroundShape.moveTo(500, 300);
+        backgroundShape.moveTo(550, 300);
         resolve();
       } catch (err) {
         this.shapes = temp;
