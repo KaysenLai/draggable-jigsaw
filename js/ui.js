@@ -44,7 +44,7 @@ startGameBtn.addEventListener('click', () => {
   startGame();
 });
 
-firstGame.classList.add('select');
+firstGame.classList.add('btn-select');
 
 // 初始游戏时间为0
 let curGameTime = 0;
@@ -62,13 +62,13 @@ function switchGame(ele) {
   saveGame();
   // 点击元素上色
   const clickEle = document.querySelector('.' + ele);
-  clickEle.classList.add('select');
+  clickEle.classList.add('btn-select');
 
   // 同时需要重新渲染画布，这里请自行补充
 
   // 之前元素褪色
   const saveEle = document.querySelector('.' + saveClass);
-  saveEle.classList.remove('select');
+  saveEle.classList.remove('btn-select');
   // 更新sessionStorage中的游戏
   sessionStorage.setItem('curGame', ele);
   // 展示开始按钮

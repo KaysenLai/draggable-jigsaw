@@ -9,9 +9,6 @@
 </head>
 
 <body>
-<!--  <canvas id="canvas" width="1000" height="648" style="border:1px solid lightgrey;">-->
-<!--    Your browser does not support the HTML5 canvas tag.-->
-<!--  </canvas>-->
   <div class="save-load-btns">
     <button id="save-to-local">save to local</button>
     <button id="load-from-local">load from local</button>
@@ -22,38 +19,34 @@
     <button id="win-data">win-data</button>
     <button id="load-nearly-win">load-nearly-win</button>
   </div>
-  <div class='container'>
-    <header>
-      <span class='header span1' style=''>Poly</span>
-      <span class='header span2' style=''>Animals</span>
-    </header>
-    <main>
-      <div class='main-container'>
-        <div class='top'>
-          <div class='top-left'>
-            <button class='first-game'>1</button>
-            <button class='second-game'>2</button>
-            <button class='third-game'>3</button>
-          </div>
-          <div class='top-right'>
-            <button class='hint'>Hints</button>
-            <button class='save'>Save</button>
-          </div>
+
+
+  <main>
+    <nav>
+      <span>Poly</span>
+      <span>Animals</span>
+    </nav>
+    <div class="container">
+      <div class='control-bar'>
+        <div>
+          <button class='btn first-game'>1</button>
+          <button class='btn second-game'>2</button>
+          <button class='btn third-game'>3</button>
         </div>
-        <canvas id='canvas' width='1000' height='648'>
-          Your browser does not support the HTML5 canvas tag.
-        </canvas>
-        <button class='start-game-btn'>start</button>
-        <div class='finish-tips hidden'>
-          <p>Congratulation!</p>
-          <p class='play-time'>08:23</p>
+        <div class='top-right'>
+          <button class='btn hint'>Hints</button>
+          <button class='btn save'>Save</button>
         </div>
       </div>
-      <footer>
-        <img class="logo" src='' alt='logo'>
-        <p>Designed and developed by Coding 101</p>
-        <p>Non-commercial use. Pictures are from GoGoDesignStudio</p>
-      </footer>
+      <canvas id='canvas' width='1100' height='648'>
+        Your browser does not support the HTML5 canvas tag.
+      </canvas>
+      <button class='start-game-btn'>start</button>
+      <div class='finish-tips hidden'>
+        <p>Congratulation!</p>
+        <p class='play-time'>08:23</p>
+      </div>
+
       <div class='alert-one hidden'>
         <button class='alert-btn'></button>
       </div>
@@ -61,8 +54,14 @@
         <p class='alert-text'></p>
         <button class='confirm-button'>确定</button>
       </div>
-    </main>
-  </div>
+    </div>
+  </main>
+  <footer>
+    <img class="logo" src='' alt='logo'>
+    <p>Designed and developed by Coding 101</p>
+    <p>Non-commercial use. Pictures are from GoGoDesignStudio</p>
+  </footer>
+
   <script type="module" src="./index.js"></script>
 </body>
 
