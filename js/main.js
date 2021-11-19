@@ -2,8 +2,17 @@ import '../scss/main.scss';
 import './ui.js';
 import MyCanvas from './canvas';
 import foxModel from './animalsModels/foxModel';
+import { alertWithButtonsByXuKai } from './ui.js';
 
 export const myCanvas = new MyCanvas(document.getElementById('canvas'));
+
+const level = localStorage.getItem('level');
+const processData = localStorage.getItem(`level-${level}`);
+if( processData ) {
+  console.log('Run here')
+  await alertWithButtonsByXuKai('您有未完成的游戏');
+}
+
 myCanvas.initGame(1);
 // myCanvas.loadFromModel(foxModel);
 myCanvas.draw();

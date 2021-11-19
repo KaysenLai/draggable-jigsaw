@@ -1,15 +1,23 @@
 import { myCanvas } from './main';
 import outputToFile from './utils/outputToFile';
 
+const saveBtn = document.querySelector('.btn.save');
 const saveToLocalBtn = document.querySelector('#save-to-local');
 const loadFromLocalBtn = document.querySelector('#load-from-local');
 const saveToFileBtn = document.querySelector('#save-to-file');
 const loadFromFileBtn = document.querySelector('#load-from-file');
 const upload = document.querySelector('#upload-file');
 
+// 保存到本地存储
+saveBtn.addEventListener('click', () => {
+  localStorage.setItem(`level-${myCanvas.getLevel()}`, myCanvas.toString());
+  localStorage.setItem(`level`, myCanvas.getLevel());
+});
+
 // 保存到本地
 saveToLocalBtn.addEventListener('click', () => {
   localStorage.setItem(`level-${myCanvas.getLevel()}`, myCanvas.toString());
+  localStorage.setItem(`level`, myCanvas.getLevel());
 });
 
 // 从本地加载

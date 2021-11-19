@@ -170,6 +170,41 @@ export function alertWithButtonBySweet(text) {
   });
 }
 
+/*带加载、删除和取消按钮的弹窗*/
+export function alertWithButtonsByXuKai(text) {
+  const alertDiv = document.querySelector('.alert-three');
+  alertDiv.classList.remove('hidden');
+  alertDiv.classList.add('show');
+  const alertText = document.querySelector('.alert-text');
+  const loadButton = document.querySelector('.load-button');
+  const deleteButton = document.querySelector('.delete-button');
+  const cancelButton = document.querySelector('.cancel-button');
+
+  alertText.innerHTML = text;
+  const level = localStorage.getItem('level');
+  const processData = localStorage.getItem(`level-${level}`);
+  loadButton.addEventListener('click', () => {
+    myCanvas
+    .loadFromString(processData)
+    .then((_) => {
+      // TODO 成功提示
+    })
+    .catch((_) => {
+      // TODO 出错提示
+    });
+    closeAlert('alert-three');
+  });
+  deleteButton.addEventListener('click', () => {
+    localStorage.removeItem('level');
+    localStorage.removeItem(`level-${level}`);
+    closeAlert('alert-three');
+  });
+  cancelButton.addEventListener('click', () => {
+    closeAlert('alert-three');
+  });
+}
+
+
 /*移除弹窗*/
 function closeAlert(ele) {
   const alertDialog = document.querySelector('.' + ele);
