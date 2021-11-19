@@ -1,10 +1,14 @@
+import logoSvg from '../img/logo.svg';
+
 const firstGame = document.querySelector('.firstGame');
 const secondGame = document.querySelector('.secondGame');
 const thirdGame = document.querySelector('.thirdGame');
 const hint = document.querySelector('.hint');
 const save = document.querySelector('.save');
 const startGameBtn = document.querySelector('.startGame');
+const logo = document.querySelector('.logo');
 
+logo.setAttribute('src', logoSvg);
 // 存储当前游戏名称
 sessionStorage.setItem('curGame', 'firstGame');
 // 分别存储三个游戏的游戏数据
@@ -46,7 +50,6 @@ firstGame.classList.add('select');
 let curGameTime = 0;
 // 定时器
 let timer;
-
 
 /*切换游戏*/
 function switchGame(ele) {
