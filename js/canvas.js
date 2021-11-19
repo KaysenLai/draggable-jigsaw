@@ -39,14 +39,8 @@ class MyCanvas {
   };
 
   getMousePosition = (e) => {
-    // const rect = this.canvas.getBoundingClientRect();
-    // const x = e.clientX - rect.left;
-    // const y = e.clientY - rect.top;
-    // const x = e.layerX;
-    // const y = e.layerY;
     const x = e.pageX - this.canvas.offsetLeft;
     const y = e.pageY - this.canvas.offsetTop;
-    console.log({ x, y });
     return { x, y };
   };
 
@@ -83,15 +77,16 @@ class MyCanvas {
     this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
-    // this.checkWin(() => {
-    //   setTimeout(() => {
-    //     alert('You Win');
-    //   }, 100);
-    // });
+    this.checkWin(() => {
+      setTimeout(() => {
+        alert('You Win');
+      }, 100);
+    });
   };
   checkWin = (cb, ...args) => {
     const isWin = this.shapes.every((shape) => {
       const winCenter = this.winPositions[shape.getId()];
+      console.log(winCenter);
       return calcDistance(winCenter, shape.getCenter()) < WIN_DISTANCE_THRESHOLD;
     });
     if (isWin) {
@@ -163,7 +158,7 @@ class MyCanvas {
       });
       this.context.fillStyle = linearGradient;
       this.context.lineWidth = shape.getLineWidth();
-      // this.context.closePath();
+      this.context.closePath();
       if (i !== 0) {
         this.context.stroke();
       }

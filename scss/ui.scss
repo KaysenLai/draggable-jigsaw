@@ -1,6 +1,6 @@
 @import "variables";
 
-html, body, .container {
+html, body {
   margin: 0;
   padding: 0;
   font-size: 14px;
@@ -35,12 +35,10 @@ nav {
 }
 
 main {
-  min-width: 1180px;
-  position: relative;
-  background: linear-gradient(#722a54 0%, #511e5b 53.99%, #1f1822 100%);
-
+  min-width: 1100px;
+  background: linear-gradient(#722a54 0%, #511e5b 53.99%, $background 100%);
   .container {
-    max-width: 1180px;
+    max-width: 1100px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -59,8 +57,6 @@ main {
       }
     }
   }
-
-
 
   .start-game-btn {
     position: absolute;
@@ -95,11 +91,9 @@ main {
   bottom: 0;
   margin: auto;
 }
-#canvas {
-  position: absolute;
-  border-radius: 6px;
-}
+
 footer {
+  padding: 50px 0;
   text-align: center;
   color: #BDBDBD;
   background-color: $background;
