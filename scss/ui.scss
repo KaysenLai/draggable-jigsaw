@@ -99,7 +99,7 @@ main {
       border-radius: 6px;
     }
 
-    .startGame {
+    .start-game-btn {
       position: absolute;
       width: 50px;
       height: 2rem;
@@ -112,7 +112,7 @@ main {
       border-radius: 5px;
     }
 
-    .finishTips {
+    .finish-tips {
       position: absolute;
       left: 28.5vw;
       bottom: 20px;
@@ -137,7 +137,7 @@ main {
   }
 }
 
-.alertDivOne {
+.alert-one {
   position: absolute;
   left: 0;
   right: 0;
@@ -183,7 +183,7 @@ main {
   display: none;
 }
 
-.alertDivTwo {
+.alert-two {
   position: absolute;
   left: 0;
   right: 0;
@@ -199,13 +199,13 @@ main {
   animation: animate 1s;
 }
 
-.alertDivTwo p {
+.alert-two p {
   word-break: break-word;
   line-height: 1rem;
   color: white;
 }
 
-.confirmButton {
+.confirm-button {
   float: right;
   height: 2rem;
   line-height: 2rem;
