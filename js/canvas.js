@@ -39,8 +39,8 @@ class MyCanvas {
   };
 
   getMousePosition = (e) => {
-    const x = e.pageX - this.canvas.offsetLeft;
-    const y = e.pageY - this.canvas.offsetTop;
+    const x = e.layerX;
+    const y = e.layerY;
     return { x, y };
   };
 
@@ -48,7 +48,6 @@ class MyCanvas {
     let currentIndex = -1;
     const mousePosition = this.getMousePosition(e);
 
-    // this.shapes 中第一项为背景，不可选中，所以 i >= 1
     for (let i = this.shapes.length - 1; i >= 1; i--) {
       if (isInsidePolygon(mousePosition, this.shapes[i].getPolygon())) {
         currentIndex = i;

@@ -1,14 +1,10 @@
 import logoSvg from '../img/logo.svg';
 
-const firstGame = document.querySelector('.firstGame');
-const secondGame = document.querySelector('.secondGame');
-const thirdGame = document.querySelector('.thirdGame');
 const firstGame = document.querySelector('.first-game');
 const secondGame = document.querySelector('.second-game');
 const thirdGame = document.querySelector('.third-game');
 const hint = document.querySelector('.hint');
 const save = document.querySelector('.save');
-const startGameBtn = document.querySelector('.startGame');
 const logo = document.querySelector('.logo');
 const startGameBtn = document.querySelector('.start-game-btn');
 
@@ -55,12 +51,11 @@ let curGameTime = 0;
 // 定时器
 let timer;
 
-
 /*切换游戏*/
 function switchGame(ele) {
   clearInterval(timer);
   const saveClass = sessionStorage.getItem('curGame');
-  if (ele == saveClass) {
+  if (ele === saveClass) {
     return;
   }
   // 保存当前游戏的数据
@@ -78,7 +73,6 @@ function switchGame(ele) {
   sessionStorage.setItem('curGame', ele);
   // 展示开始按钮
   startGameBtn.classList.remove('hidden');
-
 }
 
 /*开始游戏*/
