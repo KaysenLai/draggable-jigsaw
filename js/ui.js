@@ -1,4 +1,5 @@
 import logoSvg from '../img/logo.svg';
+import { myCanvas } from './main';
 
 const firstGame = document.querySelector('.first-game');
 const secondGame = document.querySelector('.second-game');
@@ -22,13 +23,16 @@ sessionStorage.setItem('third-gameTime', '0');
 
 firstGame.addEventListener('click', () => {
   switchGame('first-game');
+  myCanvas.initGame(1);
 });
 
 secondGame.addEventListener('click', () => {
   switchGame('second-game');
+  myCanvas.initGame(2);
 });
 
 thirdGame.addEventListener('click', () => {
+  myCanvas.initGame(3);
   switchGame('third-game');
 });
 

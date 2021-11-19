@@ -1,7 +1,7 @@
 import { calcNearShapes, isInsidePolygon, polygonLines } from './utils/polygon';
 import { calcDistance, calcLineOffset, isLineOverlap } from './utils/line';
 import Shape from './shape';
-import { CANVAS_BG_COLOR, strokeWidth, WIN_DISTANCE_THRESHOLD } from './constants';
+import { CANVAS_BG_COLOR, WIN_DISTANCE_THRESHOLD } from './constants';
 import { getGameData } from './gameData';
 
 class MyCanvas {
@@ -39,14 +39,8 @@ class MyCanvas {
   };
 
   getMousePosition = (e) => {
-    // const rect = this.canvas.getBoundingClientRect();
-    // const x = e.clientX - rect.left;
-    // const y = e.clientY - rect.top;
-    // const x = e.layerX;
-    // const y = e.layerY;
     const x = e.pageX - this.canvas.offsetLeft;
     const y = e.pageY - this.canvas.offsetTop;
-    console.log({ x, y });
     return { x, y };
   };
 
@@ -57,7 +51,6 @@ class MyCanvas {
     for (let i = this.shapes.length - 1; i >= 1; i--) {
       if (isInsidePolygon(mousePosition, this.shapes[i].getPolygon())) {
         currentIndex = i;
-        console.log(this.shapes[i]);
         break;
       }
     }
@@ -83,11 +76,11 @@ class MyCanvas {
     this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
-    // this.checkWin(() => {
-    //   setTimeout(() => {
-    //     alert('You Win');
-    //   }, 100);
-    // });
+    this.checkWin(() => {
+      setTimeout(() => {
+        alert('You Win');
+      }, 100);
+    });
   };
   checkWin = (cb, ...args) => {
     const isWin = this.shapes.every((shape) => {
@@ -148,7 +141,7 @@ class MyCanvas {
       }
       this.context.lineTo(polygon[0].x, polygon[0].y);
       this.context.strokeStyle = shape.getStrokeStyle();
-      this.context.lineWidth = strokeWidth;
+      this.context.lineWidth = shape.getLineWidth();
 
       const color = shape.getColor();
       let {
@@ -163,7 +156,7 @@ class MyCanvas {
       });
       this.context.fillStyle = linearGradient;
       this.context.lineWidth = shape.getLineWidth();
-      // this.context.closePath();
+      this.context.closePath();
       if (i !== 0) {
         this.context.stroke();
       }
@@ -188,6 +181,7 @@ class MyCanvas {
       const { polygon, center, id, color } = shape;
       this.addShape(new Shape(polygon, center, id, color));
     });
+    this.level = level;
     this.draw();
   };
 
@@ -196,7 +190,7 @@ class MyCanvas {
     this.shapes.forEach((shape) => {
       map[shape.getId()] = shape.getCenter();
     });
-    console.log(JSON.stringify(map));
+    alert('The positions of centers are in console');
   };
   loadFromString = (dataString) => {
     const temp = { shapes: this.shapes, time: 0, win: this.winPositions };
@@ -229,7 +223,7 @@ class MyCanvas {
       try {
         this.shapes = [...model];
         const backgroundShape = this.shapes[0];
-        backgroundShape.moveTo(550, 300);
+        backgroundShape.moveTo(550, 240);
         resolve();
       } catch (err) {
         this.shapes = temp;
