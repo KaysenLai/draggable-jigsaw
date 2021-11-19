@@ -116,7 +116,6 @@ class MyCanvas {
 
       for (let draggingLineIndex = 0; draggingLineIndex < draggingPolygonLines.length; draggingLineIndex++) {
         const draggingLine = draggingPolygonLines[draggingLineIndex];
-
         for (let nearLinesIndex = 0; nearLinesIndex < nearPolygonLines.length; nearLinesIndex++) {
           const nearLine = nearPolygonLines[nearLinesIndex];
           if (isLineOverlap(draggingLine, nearLine)) {
