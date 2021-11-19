@@ -1,10 +1,12 @@
+import { STROKE_WIDTH } from './constants';
+
 class Shape {
   constructor(polygon, center, id, color) {
     this.polygon = polygon;
     this.center = center;
     this.color = color;
     this.strokeStyle = '#451B4E';
-    this.lineWidth = 0;
+    this.lineWidth = STROKE_WIDTH;
     this.id = id;
   }
 

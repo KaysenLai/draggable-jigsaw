@@ -50,5 +50,5 @@ export function calcNearShapes(shape, shapes) {
   const center = shape.getCenter();
   const shapeDistances = shapes.map((shape) => ({ shape, distance: calcDistance(center, shape.getCenter()) }));
   shapeDistances.sort((obj1, obj2) => obj1.distance - obj2.distance);
-  return shapeDistances.slice(0, 3).map((item) => item.shape);
+  return shapeDistances.slice(0, 10).map((item) => item.shape);
 }

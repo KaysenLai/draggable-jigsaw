@@ -131,7 +131,8 @@
     document.addEventListener('DOMContentLoaded', () => {
       const fileInput = document.getElementById('file');
       const codeTextArea = document.getElementById('code');
-
+      let codeStr ='';
+      let bgStr = ''
       fileInput.addEventListener('change', e => {
         const files = e.target.files;
         const reader = new FileReader();
@@ -152,13 +153,15 @@
               const commands = svgPathToCommands(path);
               const pointInfo = generateShapeCode(commands);
               const colorInfo = getGradient(fileContent);
-              codeTextArea.value += `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
+              if (file.name === 'bg.svg') {
+                bgStr = `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
+              } else {
+                codeStr += `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
+              }
             }
-
-            if(i === files.length - 1) {
-              codeTextArea.value = `[${codeTextArea.value}]`
+            if(i === files.length - 1 ) {
+              codeTextArea.value += `[${bgStr + codeStr}]`
             }
-
           })
 
           reader.readAsText(file);
