@@ -14,16 +14,11 @@ const startGameBtn = document.querySelector('.start-game-btn');
 const cancelHintBtn = document.querySelector('.cancel-hint-btn');
 
 logo.setAttribute('src', logoSvg);
-// 存储当前游戏名称
-sessionStorage.setItem('curGame', 'first-game');
-// 分别存储三个游戏的游戏数据
-sessionStorage.setItem('first-gameData', '');
-sessionStorage.setItem('second-gameData', '');
-sessionStorage.setItem('third-gameData', '');
+
 // 分别存储三个游戏的游戏时间
-sessionStorage.setItem('first-gameTime', '0');
-sessionStorage.setItem('second-gameTime', '0');
-sessionStorage.setItem('third-gameTime', '0');
+localStorage.setItem('first-gameTime', '0');
+localStorage.setItem('second-gameTime', '0');
+localStorage.setItem('third-gameTime', '0');
 
 firstGame.addEventListener('click', () => {
   switchGame('first-game');
@@ -56,57 +51,67 @@ cancelHintBtn.addEventListener('click', () => {
   cancelHint();
 });
 
-firstGame.classList.add('btn-select');
+// 默认是第一个游戏
+export function defaultGame() {
+  firstGame.classList.add('btn-select');
+  // 存储当前游戏名称
+  localStorage.setItem('curGame', 'first-game');
+}
 
 // 初始游戏时间为0
 let curGameTime = 0;
 // 定时器
 let timer;
 
-alertBySweet('快点击start按钮开始游戏吧~');
+// alertBySweet('快点击start按钮开始游戏吧~');
 
 /*切换游戏*/
-function switchGame(ele) {
+export function switchGame(ele) {
   clearInterval(timer);
-  const saveClass = sessionStorage.getItem('curGame');
+  const saveClass = localStorage.getItem('curGame');
+
+  // 点击元素上色
+  const clickEle = document.querySelector('.' + ele);
+  if (!clickEle.classList.contains('btn-select')) {
+    clickEle.classList.add('btn-select');
+  }
 
   if (ele === saveClass) {
     return;
   }
 
-  // 保存当前游戏的数据
-  saveGame();
-  // 点击元素上色
-  const clickEle = document.querySelector('.' + ele);
-  clickEle.classList.add('btn-select');
-
   // 之前元素褪色
   const saveEle = document.querySelector('.' + saveClass);
   saveEle.classList.remove('btn-select');
-  // 更新sessionStorage中的游戏
-  sessionStorage.setItem('curGame', ele);
+  // 更新localStorage中的游戏
+  localStorage.setItem('curGame', ele);
   // 展示开始按钮
   startGameBtn.classList.remove('hidden');
+  calcTime();
 }
 
 /*开始游戏*/
 function startGame() {
-  // 获取游戏名称
-  const curGame = sessionStorage.getItem('curGame');
   startGameBtn.classList.add('hidden');
+  calcTime();
+  // 此时画布内的碎片才能可以拖动
+  myCanvas.unFreeze();
+}
+
+/*计时函数*/
+function calcTime() {
+  // 获取游戏名称
+  const curGame = localStorage.getItem('curGame');
   console.log('当前游戏名称为:' + curGame);
   // 获取游戏时长, 以秒来存储时间，页面上最后会以分秒的形式进行呈现
-  curGameTime = parseInt(sessionStorage.getItem(curGame + 'Time'));
+  curGameTime = parseInt(localStorage.getItem(curGame + 'Time'));
   console.log('之前的游戏时长为:' + curGameTime);
   timer = setInterval(() => {
     console.log('开始计时');
     curGameTime++;
-    sessionStorage.setItem(curGame + 'Time', curGameTime);
+    localStorage.setItem(curGame + 'Time', curGameTime);
     console.log(timeTransform(curGameTime));
   }, 1000);
-
-  // 此时画布内的碎片才能可以拖动
-  myCanvas.unFreeze();
 }
 
 /*游戏提示*/
@@ -117,7 +122,7 @@ function gameHint() {
   const body = document.querySelector('body');
   switch (level) {
     case 1:
-      hintImg.src = deerSvg;
+      hintImg.src = foxSvg;
       break;
     case 2:
       hintImg.src = elephantSvg;
@@ -182,6 +187,7 @@ export function alertWithButtonsByXuKai(text) {
   const loadButton = document.querySelector('.load-button');
   const deleteButton = document.querySelector('.delete-button');
   const cancelButton = document.querySelector('.cancel-button');
+  startGameBtn.classList.add('hidden');
 
   alertText.innerHTML = text;
   const level = localStorage.getItem('level');
@@ -190,10 +196,37 @@ export function alertWithButtonsByXuKai(text) {
     myCanvas
       .loadFromString(processData)
       .then((_) => {
-        // TODO 成功提示
+        console.log('成功');
+        const level = localStorage.getItem('level');
+        console.log(level);
+        switch (level) {
+          case '1':
+            // 存储当前游戏名称
+            localStorage.setItem('curGame', 'first-game');
+            switchGame('first-game');
+            break;
+          case '2':
+            // 存储当前游戏名称
+            localStorage.setItem('curGame', 'second-game');
+            switchGame('second-game');
+            break;
+          case '3':
+            // 存储当前游戏名称
+            localStorage.setItem('curGame', 'third-game');
+            switchGame('third-game');
+            break;
+        }
+        if (!startGameBtn.classList.contains('hidden')) {
+          startGameBtn.classList.add('hidden');
+        }
+        calcTime();
+        // 此时画布内的碎片才能可以拖动
+        myCanvas.unFreeze();
       })
       .catch((_) => {
         // TODO 出错提示
+        alertBySweet('加载失败，请刷新重试~');
+        console.log('失败');
       });
     closeAlert('alert-three');
   });
@@ -201,9 +234,13 @@ export function alertWithButtonsByXuKai(text) {
     localStorage.removeItem('level');
     localStorage.removeItem(`level-${level}`);
     closeAlert('alert-three');
+    defaultGame();
+    startGameBtn.classList.remove('hidden');
   });
   cancelButton.addEventListener('click', () => {
     closeAlert('alert-three');
+    defaultGame();
+    startGameBtn.classList.remove('hidden');
   });
 }
 

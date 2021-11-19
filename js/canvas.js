@@ -79,10 +79,10 @@ class MyCanvas {
     this.draggingOffset = null;
     this.checkWin(() => {
       setTimeout(() => {
-        const curGame = sessionStorage.getItem('curGame');
-        const curGameTime = parseInt(sessionStorage.getItem(curGame + 'Time'));
+        const curGame = localStorage.getItem('curGame');
+        const curGameTime = parseInt(localStorage.getItem(curGame + 'Time'));
         alertWithButtonBySweet('You win! 共计用时:' + timeTransform(curGameTime));
-        sessionStorage.setItem(curGame + 'Time', '0');
+        localStorage.setItem(curGame + 'Time', '0');
       }, 100);
     });
   };
