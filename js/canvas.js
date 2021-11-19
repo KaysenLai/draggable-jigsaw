@@ -199,6 +199,7 @@ class MyCanvas {
     this.shapes.forEach((shape) => {
       map[shape.getId()] = shape.getCenter();
     });
+    console.log(map);
     alertWithButtonBySweet('The positions of centers are in console');
   };
   loadFromString = (dataString) => {

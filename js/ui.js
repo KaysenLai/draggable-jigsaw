@@ -102,15 +102,11 @@ function startGame() {
 function calcTime() {
   // 获取游戏名称
   const curGame = localStorage.getItem('curGame');
-  console.log('当前游戏名称为:' + curGame);
   // 获取游戏时长, 以秒来存储时间，页面上最后会以分秒的形式进行呈现
   curGameTime = parseInt(localStorage.getItem(curGame + 'Time'));
-  console.log('之前的游戏时长为:' + curGameTime);
   timer = setInterval(() => {
-    console.log('开始计时');
     curGameTime++;
     localStorage.setItem(curGame + 'Time', curGameTime);
-    console.log(timeTransform(curGameTime));
   }, 1000);
 }
 
@@ -147,7 +143,6 @@ function cancelHint() {
 
 /*保存当前游戏*/
 function saveGame() {
-  console.log('当前游戏用时：' + curGameTime);
   // 弹窗示例--看看哪里可用
   alertBySweet('游戏数据已保存~');
 }
@@ -196,9 +191,7 @@ export function alertWithButtonsByXuKai(text) {
     myCanvas
       .loadFromString(processData)
       .then((_) => {
-        console.log('成功');
         const level = localStorage.getItem('level');
-        console.log(level);
         switch (level) {
           case '1':
             // 存储当前游戏名称
