@@ -77,14 +77,20 @@ class MyCanvas {
     this.draw();
     this.draggingShape = null;
     this.draggingOffset = null;
+    if (this.winPositions.length === 0) return;
     this.checkWin(() => {
-      setTimeout(() => {
-        const curGame = localStorage.getItem('curGame');
-        const curGameTime = parseInt(localStorage.getItem(curGame + 'Time'));
-        alertWithButtonBySweet('You win! 共计用时:' + timeTransform(curGameTime));
-        localStorage.setItem(curGame + 'Time', '0');
-      }, 100);
+      const curGame = localStorage.getItem('curGame');
+      const curGameTime = parseInt(localStorage.getItem(curGame + 'Time'));
+      alertWithButtonBySweet('You win! 共计用时:' + timeTransform(curGameTime));
+      this.freeze();
+      localStorage.setItem(curGame + 'Time', '0');
     });
+  };
+
+  loadShapes = (shapes) => {
+    this.shapes = shapes;
+    this.shapes[0].moveTo(550, 240);
+    this.draw();
   };
   checkWin = (cb, ...args) => {
     const isWin = this.shapes.every((shape) => {
@@ -199,8 +205,7 @@ class MyCanvas {
     this.shapes.forEach((shape) => {
       map[shape.getId()] = shape.getCenter();
     });
-    console.log(map);
-    alertWithButtonBySweet('The positions of centers are in console');
+    return JSON.stringify(map);
   };
   loadFromString = (dataString) => {
     const temp = { shapes: this.shapes, time: 0, win: this.winPositions };

@@ -52,3 +52,25 @@ export function calcNearShapes(shape, shapes) {
   shapeDistances.sort((obj1, obj2) => obj1.distance - obj2.distance);
   return shapeDistances.slice(0, 10).map((item) => item.shape);
 }
+
+export function calcCenter(points) {
+  let offset = points[0];
+  let twiceArea = 0;
+  let x = 0;
+  let y = 0;
+  let p1, p2;
+  let f;
+  for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+    p1 = points[i];
+    p2 = points[j];
+    f = (p1.x - offset.x) * (p2.y - offset.y) - (p2.x - offset.x) * (p1.y - offset.y);
+    twiceArea += f;
+    x += (p1.x + p2.x - 2 * offset.x) * f;
+    y += (p1.y + p2.y - 2 * offset.y) * f;
+  }
+  f = twiceArea * 3;
+  return {
+    x: x / f + offset.x,
+    y: y / f + offset.y,
+  };
+}

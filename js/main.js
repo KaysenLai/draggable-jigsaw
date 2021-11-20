@@ -2,7 +2,7 @@ import '../scss/main.scss';
 import './ui.js';
 import MyCanvas from './canvas';
 import svgModel from './utils/svgLoader';
-import { alertWithButtonsByXuKai, switchGame, defaultGame } from './ui.js';
+import { alertWithButtonsByXuKai, defaultGame } from './ui.js';
 
 export const myCanvas = new MyCanvas(document.getElementById('canvas'));
 
@@ -17,10 +17,3 @@ if (processData) {
 myCanvas.initGame(1);
 // myCanvas.loadFromModel(svgModel);
 myCanvas.draw();
-
-document.querySelector('#win-data').addEventListener('click', () => {
-  myCanvas.exportWin();
-});
-document.querySelector('#load-nearly-win').addEventListener('click', () => {
-  myCanvas.initGame(11);
-});

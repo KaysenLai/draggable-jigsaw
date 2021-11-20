@@ -1,4 +1,6 @@
 import Shape from '../shape';
+import { calcCenter } from './polygon';
+import { myCanvas } from '../main';
 
 const svgLoader = [
   new Shape(
@@ -759,5 +761,146 @@ const svgLoader = [
     },
   ),
 ];
+
+const svgPathToCommands = (str) => {
+  let results = [];
+  let match;
+  while ((match = markerRegEx.exec(str)) !== null) {
+    results.push(match);
+  }
+  return results
+    .map(function (match) {
+      return {
+        marker: str[match.index],
+        index: match.index,
+      };
+    })
+    .reduceRight(function (all, cur) {
+      let chunk = str.substring(cur.index, all.length ? all[all.length - 1].index : str.length);
+      return all.concat([
+        {
+          marker: cur.marker,
+          index: cur.index,
+          chunk: chunk.length > 0 ? chunk.substr(1, chunk.length - 1) : chunk,
+        },
+      ]);
+    }, [])
+    .reverse()
+    .map(function (command) {
+      let values = command.chunk.match(digitRegEx);
+      return {
+        marker: command.marker,
+        values: values ? values.map(parseFloat) : [],
+      };
+    });
+};
+
+const markerRegEx = /[MmLlSsQqLlHhVvCcSsQqTtAaZz]/g;
+const digitRegEx = /-?[0-9]*\.?\d+/g;
+
+const generateShapeCode = (svgCommands) => {
+  const pointArray = [];
+  svgCommands.forEach((command) => {
+    const marker = command.marker.toLowerCase();
+    switch (marker) {
+      case 'm':
+      case 'l':
+        pointArray.push({
+          x: command.values[0],
+          y: command.values[1],
+        });
+        break;
+      case 'h':
+        pointArray.push({
+          x: command.values[0],
+          y: pointArray[pointArray.length - 1].y,
+        });
+        break;
+      case 'v':
+        pointArray.push({
+          x: pointArray[pointArray.length - 1].x,
+          y: command.values[0],
+        });
+        break;
+      case 'z':
+        break;
+      default:
+        alert('Unsupported SVG command: ' + command.marker);
+        return;
+    }
+  });
+  const centerPoint = calcCenter(pointArray);
+  return { points: pointArray, center: centerPoint };
+};
+
+const getPathString = (svgContent) => {
+  const matchResult = svgContent.match(/<path\sd="(.*?)"/);
+  return matchResult ? matchResult[1] : '';
+};
+
+const getGradient = (svgContent) => {
+  const stopArray = [];
+  const x1 = svgContent.match(/x1="(.*?)"/)[1];
+  const y1 = svgContent.match(/y1="(.*?)"/)[1];
+  const x2 = svgContent.match(/x2="(.*?)"/)[1];
+  const y2 = svgContent.match(/y2="(.*?)"/)[1];
+  const stPoint = {
+    x1: +x1,
+    y1: +y1,
+  };
+  const endPoint = {
+    x2: +x2,
+    y2: +y2,
+  };
+
+  const stops = svgContent.match(/<stop(\s+offset="(.*?)")?\s+stop-color="(.*?)"/gm);
+  stops.forEach((e) => {
+    const offset = e.match(/offset="(.*?)"/) ? +e.match(/offset="(.*?)"/)[1] : 0;
+    const color = e.match(/stop-color="(.*?)"/)[1];
+    stopArray.push([offset, color]);
+  });
+  return { stPoint, endPoint, colorStops: stopArray };
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const fileInput = document.getElementById('file');
+  let polyShapes = [];
+  let bgShape = null;
+  let shapes = [];
+  fileInput.addEventListener('change', (e) => {
+    const files = e.target.files;
+    const reader = new FileReader();
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const reader = new FileReader();
+      reader.addEventListener('loadend', () => {
+        const fileContent = reader.result;
+        const fileId = file.name.match(/\-(.*?)\./)?.[1] || 0;
+
+        if (fileContent.length > 0) {
+          const path = getPathString(fileContent);
+          const commands = svgPathToCommands(path);
+          const pointInfo = generateShapeCode(commands);
+          const colorInfo = getGradient(fileContent);
+          if (file.name === 'bg.svg') {
+            bgShape = new Shape(pointInfo.points, pointInfo.center, fileId, colorInfo);
+          } else {
+            polyShapes.push(new Shape(pointInfo.points, pointInfo.center, fileId, colorInfo));
+          }
+        }
+        if (i === files.length - 1) {
+          shapes = [bgShape, ...polyShapes];
+          if (shapes[0] === null) {
+            alert('请加载bg.svg');
+            return;
+          }
+          myCanvas.loadShapes(shapes);
+        }
+      });
+
+      reader.readAsText(file);
+    }
+  });
+});
 
 export default svgLoader;
