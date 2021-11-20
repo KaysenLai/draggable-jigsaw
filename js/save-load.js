@@ -77,3 +77,17 @@ upload.addEventListener('change', () => {
       });
   };
 });
+document.querySelector('#win-data').addEventListener('click', () => {
+  const processData = myCanvas.exportWin();
+  outputToFile(
+    processData,
+    'text/plain',
+    `${new Date()
+      .toISOString()
+      .replace(/\.(.*)+/, '')
+      .replace('T', '')}-win-positions.codeing101`,
+  );
+});
+document.querySelector('#load-nearly-win').addEventListener('click', () => {
+  myCanvas.initGame(11);
+});
