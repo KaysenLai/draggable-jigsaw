@@ -86,6 +86,12 @@ class MyCanvas {
       localStorage.setItem(curGame + 'Time', '0');
     });
   };
+
+  loadShapes = (shapes) => {
+    this.shapes = shapes;
+    this.shapes[0].moveTo(550, 240);
+    this.draw();
+  };
   checkWin = (cb, ...args) => {
     const isWin = this.shapes.every((shape) => {
       const winCenter = this.winPositions[shape.getId()];

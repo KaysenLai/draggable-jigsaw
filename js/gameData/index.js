@@ -1,13 +1,13 @@
-import { foxGameData, foxGameDataNearWin } from './foxData';
+import { foxGameData } from './foxData';
 import { dearGameData } from './dearData';
-import { elephantGameData } from './elephantData';
+import { elephantGameData, elephantGameDataNearWin } from './elephantData';
 
 export const getGameData = (level) => {
   switch (level) {
     case 1:
       return foxGameData;
-    case 11:
-      return foxGameDataNearWin;
+    case 222:
+      return elephantGameDataNearWin;
 
     case 2:
       return elephantGameData;

@@ -89,5 +89,5 @@ document.querySelector('#win-data').addEventListener('click', () => {
   );
 });
 document.querySelector('#load-nearly-win').addEventListener('click', () => {
-  myCanvas.initGame(11);
+  myCanvas.initGame(222);
 });
