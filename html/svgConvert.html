@@ -96,7 +96,7 @@
       });
       const centerPoint = calcCenter(pointArray);
 
-      return `${JSON.stringify(pointArray)}, ${JSON.stringify(centerPoint)},\n`
+      return `polygon: ${JSON.stringify(pointArray)}, center: ${JSON.stringify(centerPoint)}\n`
     }
 
     const getPathString = (svgContent) => {
@@ -125,7 +125,7 @@
         const color = e.match(/stop-color="(.*?)"/)[1];
         stopArray.push([offset, color]);
       });
-      return `{stPoint: ${JSON.stringify(stPoint)}, endPoint:${JSON.stringify(endPoint)}, colorStops:${JSON.stringify(stopArray)} }`;
+      return `{stPoint: ${JSON.stringify(stPoint)}, endPoint:${JSON.stringify(endPoint)}, colorStops:${JSON.stringify(stopArray)}, }`;
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -154,9 +154,9 @@
               const pointInfo = generateShapeCode(commands);
               const colorInfo = getGradient(fileContent);
               if (file.name === 'bg.svg') {
-                bgStr = `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
+                bgStr = `{ ${pointInfo}, id: ${fileId}, color: ${colorInfo} },\n\n`
               } else {
-                codeStr += `new Shape(${pointInfo}${fileId},${colorInfo}),\n\n`
+                codeStr += `{ ${pointInfo}, id: ${fileId}, color: ${colorInfo} },\n\n`
               }
             }
             if(i === files.length - 1 ) {
